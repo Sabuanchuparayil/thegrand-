@@ -59,10 +59,10 @@ export default async function AdminDashboard() {
       <div className="space-y-8">
         {/* Header */}
         <div>
-          <h1 className="text-4xl font-serif font-bold text-charcoal mb-2">
-            Admin Dashboard
-          </h1>
-          <p className="text-charcoal/70">
+            <h1 className="text-4xl font-serif font-bold text-gray-900 mb-2">
+              Admin Dashboard
+            </h1>
+            <p className="text-gray-600">
             Welcome back, {session.user?.name || "Admin"}! Here's your overview.
           </p>
         </div>

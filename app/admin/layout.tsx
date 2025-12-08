@@ -47,8 +47,8 @@ function AdminNavItems({ onItemClick }: { onItemClick: () => void }) {
                 href={item.href}
                 className={`flex items-center space-x-3 px-4 py-3 rounded-lg transition-colors group ${
                   isActive
-                    ? "bg-gold text-white"
-                    : "text-charcoal hover:bg-gold/10 hover:text-gold"
+                    ? "bg-blue-600 text-white shadow-md"
+                    : "text-gray-700 hover:bg-blue-50 hover:text-blue-600"
                 }`}
                 onClick={onItemClick}
               >
@@ -86,10 +86,10 @@ export default function AdminLayout({
 
   if (status === "loading") {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <div className="text-center">
-          <Sparkles className="w-12 h-12 text-gold mx-auto mb-4 animate-pulse" />
-          <p className="text-charcoal">Loading...</p>
+          <Sparkles className="w-12 h-12 text-blue-600 mx-auto mb-4 animate-pulse" />
+          <p className="text-gray-700">Loading...</p>
         </div>
       </div>
     );
@@ -105,12 +105,12 @@ export default function AdminLayout({
   }
 
   return (
-    <div className="min-h-screen bg-cream">
+    <div className="min-h-screen bg-gray-50">
       {/* Mobile Menu Button */}
       <div className="lg:hidden fixed top-4 left-4 z-50">
         <button
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          className="bg-gold text-white p-2 rounded-lg"
+          className="bg-blue-600 text-white p-2 rounded-lg shadow-md"
         >
           {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
         </button>
@@ -118,7 +118,7 @@ export default function AdminLayout({
 
       {/* Sidebar */}
       <aside
-        className={`fixed top-0 left-0 h-full w-64 bg-white border-r border-gold/20 z-40 transition-transform duration-300 ${
+        className={`fixed top-0 left-0 h-full w-64 bg-white border-r border-gray-200 z-40 transition-transform duration-300 shadow-lg ${
           sidebarOpen ? "translate-x-0" : "-translate-x-full"
         } lg:translate-x-0 ${
           mobileMenuOpen ? "translate-x-0" : "-translate-x-full"
@@ -126,22 +126,22 @@ export default function AdminLayout({
       >
         <div className="flex flex-col h-full">
           {/* Logo */}
-          <div className="p-6 border-b border-gold/20">
+          <div className="p-6 border-b border-gray-200 bg-blue-600">
             <Link href="/admin" className="flex items-center space-x-2">
-              <Sparkles className="w-8 h-8 text-gold" />
-              <span className="text-xl font-serif font-bold gold-gradient">
+              <Sparkles className="w-8 h-8 text-white" />
+              <span className="text-xl font-serif font-bold text-white">
                 Admin Panel
               </span>
             </Link>
           </div>
 
           {/* User Info */}
-          <div className="p-4 border-b border-gold/20">
-            <p className="text-sm text-charcoal/70">Logged in as</p>
-            <p className="font-semibold text-charcoal">
+          <div className="p-4 border-b border-gray-200 bg-gray-50">
+            <p className="text-sm text-gray-600">Logged in as</p>
+            <p className="font-semibold text-gray-900">
               {session.user?.name || session.user?.email}
             </p>
-            <p className="text-xs text-gold capitalize">
+            <p className="text-xs text-blue-600 capitalize font-medium">
               {(session.user as any)?.role || "admin"}
             </p>
           </div>
@@ -150,16 +150,16 @@ export default function AdminLayout({
           <AdminNavItems onItemClick={() => setMobileMenuOpen(false)} />
 
           {/* Footer */}
-          <div className="p-4 border-t border-gold/20">
+          <div className="p-4 border-t border-gray-200 bg-gray-50">
             <Link
               href="/"
-              className="block mb-2 text-sm text-charcoal/70 hover:text-gold transition-colors"
+              className="block mb-2 text-sm text-gray-600 hover:text-blue-600 transition-colors"
             >
               ← Back to Store
             </Link>
             <button
-              onClick={() => signOut({ callbackUrl: "/" })}
-              className="flex items-center space-x-2 w-full text-sm text-red-600 hover:text-red-700 transition-colors"
+              onClick={() => signOut({ callbackUrl: "/admin" })}
+              className="flex items-center space-x-2 w-full text-sm text-red-600 hover:text-red-700 transition-colors font-medium"
             >
               <LogOut className="w-4 h-4" />
               <span>Sign Out</span>

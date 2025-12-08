@@ -31,7 +31,16 @@ export default function SignInPage() {
       if (result?.error) {
         setError("Invalid email or password");
       } else {
-        router.push("/profile");
+        // Fetch session to get user role
+        const sessionResponse = await fetch("/api/auth/session");
+        const session = await sessionResponse.json();
+        const userRole = (session?.user as any)?.role;
+        
+        if (userRole === "admin" || userRole === "manager") {
+          router.push("/admin");
+        } else {
+          router.push("/profile");
+        }
         router.refresh();
       }
     } catch (err) {
