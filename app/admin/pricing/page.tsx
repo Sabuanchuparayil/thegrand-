@@ -51,7 +51,7 @@ export default async function AdminPricingPage() {
           systemHealth.status === "healthy" ? "bg-emerald-50 border border-emerald-200" : "bg-blue-50 border border-blue-200"
         }`}>
           <div className="flex items-center justify-between">
-            <div>
+            <div className="flex-1">
               <h3 className="font-semibold text-gray-900 mb-1">
                 System Status: <span className="capitalize">{systemHealth.status}</span>
               </h3>
@@ -59,10 +59,26 @@ export default async function AdminPricingPage() {
                 Last Update: {systemHealth.lastUpdate ? new Date(systemHealth.lastUpdate).toLocaleString() : "Never"}
               </p>
               {systemHealth.lastError && (
-                <p className="text-sm text-red-600 mt-2">
-                  <AlertCircle className="w-4 h-4 inline mr-1" />
-                  {systemHealth.lastError}
-                </p>
+                <div className="mt-3 p-3 bg-red-50 border border-red-200 rounded-lg">
+                  <p className="text-sm text-red-800 font-semibold mb-2">
+                    <AlertCircle className="w-4 h-4 inline mr-1" />
+                    {systemHealth.lastError}
+                  </p>
+                  {systemHealth.lastError.includes("METALS_API_KEY") && (
+                    <div className="text-sm text-red-700">
+                      <p className="mb-2 font-semibold">To fix this issue:</p>
+                      <ol className="list-decimal list-inside space-y-1 ml-2">
+                        <li>Go to <a href="https://metals.dev/" target="_blank" rel="noopener noreferrer" className="underline">metals.dev</a> and get your API key</li>
+                        <li>In Railway Dashboard → Your Project → Variables</li>
+                        <li>Add <code className="bg-red-100 px-1 rounded">METALS_API_KEY</code> with your API key</li>
+                        <li>Railway will automatically redeploy</li>
+                      </ol>
+                      <p className="mt-2 text-xs">
+                        See <a href="/METALS_API_SETUP.md" target="_blank" className="underline">setup guide</a> for detailed instructions.
+                      </p>
+                    </div>
+                  )}
+                </div>
               )}
             </div>
           </div>

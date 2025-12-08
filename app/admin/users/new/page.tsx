@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import AdminLayout from "../../layout";
 import { UserPlus, Save, X } from "lucide-react";
@@ -11,23 +11,51 @@ export default function NewUserPage() {
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState("");
+  const [customRoles, setCustomRoles] = useState<Array<{ _id: string; name: string; slug: { current: string } }>>([]);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     phone: "",
     whatsapp: "",
-    role: "customer" as UserRole,
+    role: "customer" as UserRole | string,
     permissions: [] as string[],
     isActive: true,
   });
 
-  const handleRoleChange = (role: UserRole) => {
+  useEffect(() => {
+    // Fetch custom roles
+    fetch("/api/roles")
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.roles) {
+          setCustomRoles(data.roles);
+        }
+      })
+      .catch((err) => console.error("Error fetching roles:", err));
+  }, []);
+
+  const handleRoleChange = (role: UserRole | string) => {
     setFormData((prev) => ({
       ...prev,
       role,
-      // Auto-select default permissions for role
-      permissions: ROLE_PERMISSIONS[role] || [],
+      // Auto-select default permissions for predefined roles
+      permissions: (ROLE_PERMISSIONS[role as UserRole] || []) as string[],
     }));
+    
+    // If it's a custom role, fetch its permissions
+    if (customRoles.find((r) => r.slug?.current === role || r._id === role)) {
+      fetch(`/api/roles/${role}`)
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.role?.permissions) {
+            setFormData((prev) => ({
+              ...prev,
+              permissions: data.role.permissions,
+            }));
+          }
+        })
+        .catch((err) => console.error("Error fetching role permissions:", err));
+    }
   };
 
   const togglePermission = (permissionId: string) => {
@@ -182,15 +210,24 @@ export default function NewUserPage() {
                 <select
                   required
                   value={formData.role}
-                  onChange={(e) =>
-                    handleRoleChange(e.target.value as UserRole)
-                  }
+                  onChange={(e) => handleRoleChange(e.target.value)}
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                 >
-                  <option value="customer">Customer</option>
-                  <option value="staff">Staff</option>
-                  <option value="manager">Manager</option>
-                  <option value="admin">Admin</option>
+                  <optgroup label="Standard Roles">
+                    <option value="customer">Customer</option>
+                    <option value="staff">Staff</option>
+                    <option value="manager">Manager</option>
+                    <option value="admin">Admin</option>
+                  </optgroup>
+                  {customRoles.length > 0 && (
+                    <optgroup label="Custom Roles">
+                      {customRoles.map((role) => (
+                        <option key={role._id} value={role.slug?.current || role._id}>
+                          {role.name}
+                        </option>
+                      ))}
+                    </optgroup>
+                  )}
                 </select>
                 <p className="text-sm text-gray-600 mt-2">
                   Default permissions for {formData.role} role will be
