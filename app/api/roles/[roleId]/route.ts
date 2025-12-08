@@ -5,10 +5,10 @@ export const dynamic = "force-dynamic";
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { roleId: string } }
+  { params }: { params: Promise<{ roleId: string }> }
 ) {
   try {
-    const { roleId } = params;
+    const { roleId } = await params;
     
     // Try to find by slug first, then by _id
     const role = await client.fetch(
