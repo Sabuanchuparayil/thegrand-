@@ -28,16 +28,16 @@ export default async function AdminProductsPage() {
         {/* Header */}
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-4xl font-serif font-bold text-charcoal mb-2">
+            <h1 className="text-4xl font-serif font-bold text-gray-900 mb-2">
               Products Management
             </h1>
-            <p className="text-charcoal/70">
+            <p className="text-gray-900/70">
               Manage your product catalog ({products.length} products)
             </p>
           </div>
           <Link
             href="/admin/products/new"
-            className="flex items-center space-x-2 bg-gold text-white px-6 py-3 rounded-lg hover:bg-gold/90 transition-colors"
+            className="flex items-center space-x-2 bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors shadow-md"
           >
             <Plus className="w-5 h-5" />
             <span>Add New Product</span>
@@ -45,24 +45,24 @@ export default async function AdminProductsPage() {
         </div>
 
         {/* Search and Filters */}
-        <div className="bg-white rounded-lg luxury-shadow p-4">
+        <div className="bg-white rounded-lg shadow-md p-4">
           <div className="flex items-center space-x-4">
             <div className="flex-1 relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-charcoal/40" />
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-900/40" />
               <input
                 type="text"
                 placeholder="Search products..."
-                className="w-full pl-10 pr-4 py-2 border border-charcoal/20 rounded-lg focus:outline-none focus:ring-2 focus:ring-gold"
+                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
-            <select className="px-4 py-2 border border-charcoal/20 rounded-lg focus:outline-none focus:ring-2 focus:ring-gold">
+            <select className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
               <option>All Categories</option>
               <option>Necklaces</option>
               <option>Earrings</option>
               <option>Rings</option>
               <option>Bracelets</option>
             </select>
-            <select className="px-4 py-2 border border-charcoal/20 rounded-lg focus:outline-none focus:ring-2 focus:ring-gold">
+            <select className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
               <option>All Status</option>
               <option>Active</option>
               <option>Draft</option>
@@ -71,27 +71,27 @@ export default async function AdminProductsPage() {
         </div>
 
         {/* Products Table */}
-        <div className="bg-white rounded-lg luxury-shadow overflow-hidden">
+        <div className="bg-white rounded-lg shadow-md overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full">
-              <thead className="bg-cream">
+              <thead className="bg-gray-50">
                 <tr>
-                  <th className="text-left py-4 px-6 font-semibold text-charcoal">
+                  <th className="text-left py-4 px-6 font-semibold text-gray-900">
                     Product
                   </th>
-                  <th className="text-left py-4 px-6 font-semibold text-charcoal">
+                  <th className="text-left py-4 px-6 font-semibold text-gray-900">
                     Category
                   </th>
-                  <th className="text-left py-4 px-6 font-semibold text-charcoal">
+                  <th className="text-left py-4 px-6 font-semibold text-gray-900">
                     Price
                   </th>
-                  <th className="text-left py-4 px-6 font-semibold text-charcoal">
+                  <th className="text-left py-4 px-6 font-semibold text-gray-900">
                     Stock
                   </th>
-                  <th className="text-left py-4 px-6 font-semibold text-charcoal">
+                  <th className="text-left py-4 px-6 font-semibold text-gray-900">
                     Status
                   </th>
-                  <th className="text-left py-4 px-6 font-semibold text-charcoal">
+                  <th className="text-left py-4 px-6 font-semibold text-gray-900">
                     Actions
                   </th>
                 </tr>
@@ -100,20 +100,20 @@ export default async function AdminProductsPage() {
                 {products.length === 0 ? (
                   <tr>
                     <td colSpan={6} className="text-center py-12">
-                      <Package className="w-16 h-16 text-charcoal/20 mx-auto mb-4" />
-                      <p className="text-charcoal/70">No products found</p>
+                      <Package className="w-16 h-16 text-gray-900/20 mx-auto mb-4" />
+                      <p className="text-gray-900/70">No products found</p>
                     </td>
                   </tr>
                 ) : (
                   products.map((product: any) => (
                     <tr
                       key={product._id}
-                      className="border-b border-charcoal/5 hover:bg-cream/50"
+                      className="border-b border-gray-200 hover:bg-gray-50/50"
                     >
                       <td className="py-4 px-6">
                         <div className="flex items-center space-x-4">
                           {product.images?.[0] && (
-                            <div className="w-16 h-16 relative rounded-lg overflow-hidden bg-cream">
+                            <div className="w-16 h-16 relative rounded-lg overflow-hidden bg-gray-50">
                               <Image
                                 src={
                                   typeof product.images[0] === "string"
@@ -129,21 +129,21 @@ export default async function AdminProductsPage() {
                           <div>
                             <Link
                               href={`/products/${product.slug?.current || product.slug}`}
-                              className="font-semibold text-charcoal hover:text-gold transition-colors"
+                              className="font-semibold text-gray-900 hover:text-blue-600 transition-colors"
                             >
                               {product.name}
                             </Link>
-                            <p className="text-sm text-charcoal/60">
+                            <p className="text-sm text-gray-900/60">
                               {product.material_type || "N/A"}
                             </p>
                           </div>
                         </div>
                       </td>
-                      <td className="py-4 px-6 text-charcoal/70">
+                      <td className="py-4 px-6 text-gray-900/70">
                         {product.category || "Uncategorized"}
                       </td>
                       <td className="py-4 px-6">
-                        <span className="font-semibold text-gold">
+                        <span className="font-semibold text-blue-600">
                           £{product.displayPrice || product.price || "0.00"}
                         </span>
                         {product.pricing_model === "dynamic" && (
@@ -152,14 +152,14 @@ export default async function AdminProductsPage() {
                           </span>
                         )}
                       </td>
-                      <td className="py-4 px-6 text-charcoal/70">
+                      <td className="py-4 px-6 text-gray-900/70">
                         {product.stock || "N/A"}
                       </td>
                       <td className="py-4 px-6">
                         <span
                           className={`px-2 py-1 rounded-full text-xs font-semibold ${
                             product.featured
-                              ? "bg-gold text-white"
+                              ? "bg-blue-600 text-white"
                               : "bg-gray-100 text-gray-800"
                           }`}
                         >
@@ -193,15 +193,15 @@ export default async function AdminProductsPage() {
 
         {/* Pagination */}
         {products.length > 0 && (
-          <div className="flex items-center justify-between bg-white rounded-lg luxury-shadow p-4">
-            <p className="text-charcoal/70">
+          <div className="flex items-center justify-between bg-white rounded-lg shadow-md p-4">
+            <p className="text-gray-900/70">
               Showing 1-{products.length} of {products.length} products
             </p>
             <div className="flex items-center space-x-2">
-              <button className="px-4 py-2 border border-charcoal/20 rounded-lg hover:bg-cream transition-colors">
+              <button className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
                 Previous
               </button>
-              <button className="px-4 py-2 border border-charcoal/20 rounded-lg hover:bg-cream transition-colors">
+              <button className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
                 Next
               </button>
             </div>

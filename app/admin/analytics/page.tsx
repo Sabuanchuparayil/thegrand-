@@ -46,10 +46,10 @@ export default async function AdminAnalyticsPage() {
       <div className="space-y-6">
         {/* Header */}
         <div>
-          <h1 className="text-4xl font-serif font-bold text-charcoal mb-2">
+          <h1 className="text-4xl font-serif font-bold text-gray-900 mb-2">
             Analytics & Reports
           </h1>
-          <p className="text-charcoal/70">
+          <p className="text-gray-900/70">
             View insights and performance metrics
           </p>
         </div>
@@ -60,7 +60,7 @@ export default async function AdminAnalyticsPage() {
             title="Total Revenue"
             value={`£${totalRevenue.toLocaleString()}`}
             icon={DollarSign}
-            color="text-gold"
+            color="text-blue-600"
             change="+12.5%"
           />
           <MetricCard
@@ -87,8 +87,8 @@ export default async function AdminAnalyticsPage() {
         </div>
 
         {/* Order Status Breakdown */}
-        <div className="bg-white rounded-lg luxury-shadow p-6">
-          <h2 className="text-2xl font-serif font-bold text-charcoal mb-6">
+        <div className="bg-white rounded-lg shadow-md p-6">
+          <h2 className="text-2xl font-serif font-bold text-gray-900 mb-6">
             Orders by Status
           </h2>
           <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
@@ -121,27 +121,27 @@ export default async function AdminAnalyticsPage() {
         </div>
 
         {/* Recent Activity */}
-        <div className="bg-white rounded-lg luxury-shadow p-6">
-          <h2 className="text-2xl font-serif font-bold text-charcoal mb-6">
+        <div className="bg-white rounded-lg shadow-md p-6">
+          <h2 className="text-2xl font-serif font-bold text-gray-900 mb-6">
             Recent Orders
           </h2>
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead>
                 <tr className="border-b border-charcoal/10">
-                  <th className="text-left py-3 px-4 font-semibold text-charcoal">
+                  <th className="text-left py-3 px-4 font-semibold text-gray-900">
                     Order #
                   </th>
-                  <th className="text-left py-3 px-4 font-semibold text-charcoal">
+                  <th className="text-left py-3 px-4 font-semibold text-gray-900">
                     Customer
                   </th>
-                  <th className="text-left py-3 px-4 font-semibold text-charcoal">
+                  <th className="text-left py-3 px-4 font-semibold text-gray-900">
                     Amount
                   </th>
-                  <th className="text-left py-3 px-4 font-semibold text-charcoal">
+                  <th className="text-left py-3 px-4 font-semibold text-gray-900">
                     Status
                   </th>
-                  <th className="text-left py-3 px-4 font-semibold text-charcoal">
+                  <th className="text-left py-3 px-4 font-semibold text-gray-900">
                     Date
                   </th>
                 </tr>
@@ -149,7 +149,7 @@ export default async function AdminAnalyticsPage() {
               <tbody>
                 {recentOrders.length === 0 ? (
                   <tr>
-                    <td colSpan={5} className="text-center py-8 text-charcoal/70">
+                    <td colSpan={5} className="text-center py-8 text-gray-900/70">
                       No recent orders
                     </td>
                   </tr>
@@ -157,12 +157,12 @@ export default async function AdminAnalyticsPage() {
                   recentOrders.map((order: any) => (
                     <tr
                       key={order._id}
-                      className="border-b border-charcoal/5 hover:bg-cream/50"
+                      className="border-b border-gray-200 hover:bg-gray-50/50"
                     >
-                      <td className="py-3 px-4 font-semibold text-gold">
+                      <td className="py-3 px-4 font-semibold text-blue-600">
                         {order.orderNumber || order._id.slice(-8)}
                       </td>
-                      <td className="py-3 px-4 text-charcoal/70">
+                      <td className="py-3 px-4 text-gray-900/70">
                         {order.shippingAddress?.name || "N/A"}
                       </td>
                       <td className="py-3 px-4 font-semibold">
@@ -181,7 +181,7 @@ export default async function AdminAnalyticsPage() {
                           {order.status || order.orderStatus || "pending"}
                         </span>
                       </td>
-                      <td className="py-3 px-4 text-charcoal/70 text-sm">
+                      <td className="py-3 px-4 text-gray-900/70 text-sm">
                         {order.createdAt
                           ? new Date(order.createdAt).toLocaleDateString()
                           : "N/A"}
@@ -196,52 +196,52 @@ export default async function AdminAnalyticsPage() {
 
         {/* Product Statistics */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div className="bg-white rounded-lg luxury-shadow p-6">
-            <h2 className="text-2xl font-serif font-bold text-charcoal mb-4">
+          <div className="bg-white rounded-lg shadow-md p-6">
+            <h2 className="text-2xl font-serif font-bold text-gray-900 mb-4">
               Product Statistics
             </h2>
             <div className="space-y-4">
               <div className="flex justify-between items-center">
-                <span className="text-charcoal/70">Total Products</span>
-                <span className="font-semibold text-charcoal">
+                <span className="text-gray-900/70">Total Products</span>
+                <span className="font-semibold text-gray-900">
                   {products.length}
                 </span>
               </div>
               <div className="flex justify-between items-center">
-                <span className="text-charcoal/70">Featured Products</span>
-                <span className="font-semibold text-charcoal">
+                <span className="text-gray-900/70">Featured Products</span>
+                <span className="font-semibold text-gray-900">
                   {products.filter((p: any) => p.featured).length}
                 </span>
               </div>
               <div className="flex justify-between items-center">
-                <span className="text-charcoal/70">Dynamic Pricing</span>
-                <span className="font-semibold text-charcoal">
+                <span className="text-gray-900/70">Dynamic Pricing</span>
+                <span className="font-semibold text-gray-900">
                   {products.filter((p: any) => p.pricing_model === "dynamic").length}
                 </span>
               </div>
             </div>
           </div>
 
-          <div className="bg-white rounded-lg luxury-shadow p-6">
-            <h2 className="text-2xl font-serif font-bold text-charcoal mb-4">
+          <div className="bg-white rounded-lg shadow-md p-6">
+            <h2 className="text-2xl font-serif font-bold text-gray-900 mb-4">
               User Statistics
             </h2>
             <div className="space-y-4">
               <div className="flex justify-between items-center">
-                <span className="text-charcoal/70">Total Users</span>
-                <span className="font-semibold text-charcoal">
+                <span className="text-gray-900/70">Total Users</span>
+                <span className="font-semibold text-gray-900">
                   {users.length}
                 </span>
               </div>
               <div className="flex justify-between items-center">
-                <span className="text-charcoal/70">Customers</span>
-                <span className="font-semibold text-charcoal">
+                <span className="text-gray-900/70">Customers</span>
+                <span className="font-semibold text-gray-900">
                   {users.filter((u) => u.role === "customer").length}
                 </span>
               </div>
               <div className="flex justify-between items-center">
-                <span className="text-charcoal/70">Admin Users</span>
-                <span className="font-semibold text-charcoal">
+                <span className="text-gray-900/70">Admin Users</span>
+                <span className="font-semibold text-gray-900">
                   {users.filter((u) => u.role === "admin" || u.role === "manager").length}
                 </span>
               </div>
@@ -267,13 +267,13 @@ function MetricCard({
   change: string;
 }) {
   return (
-    <div className="bg-white rounded-lg luxury-shadow p-6">
+    <div className="bg-white rounded-lg shadow-md p-6">
       <div className="flex items-center justify-between mb-4">
         <Icon className={`w-8 h-8 ${color}`} />
         <span className="text-sm font-semibold text-emerald-600">{change}</span>
       </div>
-      <div className="text-2xl font-bold text-charcoal mb-1">{value}</div>
-      <div className="text-sm text-charcoal/70">{title}</div>
+      <div className="text-2xl font-bold text-gray-900 mb-1">{value}</div>
+      <div className="text-sm text-gray-900/70">{title}</div>
     </div>
   );
 }
@@ -284,7 +284,7 @@ function StatusCard({ label, count, color }: { label: string; count: number; col
       <div className={`${color} px-4 py-2 rounded-lg font-semibold mb-2`}>
         {count}
       </div>
-      <div className="text-sm text-charcoal/70">{label}</div>
+      <div className="text-sm text-gray-900/70">{label}</div>
     </div>
   );
 }

@@ -40,10 +40,10 @@ export default async function AdminOrdersPage({
       <div className="space-y-6">
         {/* Header */}
         <div>
-          <h1 className="text-4xl font-serif font-bold text-charcoal mb-2">
+          <h1 className="text-4xl font-serif font-bold text-gray-900 mb-2">
             Orders Management
           </h1>
-          <p className="text-charcoal/70">
+          <p className="text-gray-900/70">
             Manage and track all customer orders ({orders.length} orders)
           </p>
         </div>
@@ -52,103 +52,103 @@ export default async function AdminOrdersPage({
         <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
           <Link
             href="/admin/orders"
-            className={`bg-white rounded-lg luxury-shadow p-4 text-center hover:shadow-xl transition-all ${
-              !searchParams.status ? "ring-2 ring-gold" : ""
+            className={`bg-white rounded-lg shadow-md p-4 text-center hover:shadow-xl transition-all ${
+              !searchParams.status ? "ring-2 ring-blue-600" : ""
             }`}
           >
-            <div className="text-2xl font-bold text-charcoal mb-1">
+            <div className="text-2xl font-bold text-gray-900 mb-1">
               {allOrders.length}
             </div>
-            <div className="text-sm text-charcoal/70">All Orders</div>
+            <div className="text-sm text-gray-900/70">All Orders</div>
           </Link>
           <Link
             href="/admin/orders?status=pending"
-            className={`bg-white rounded-lg luxury-shadow p-4 text-center hover:shadow-xl transition-all ${
+            className={`bg-white rounded-lg shadow-md p-4 text-center hover:shadow-xl transition-all ${
               searchParams.status === "pending" ? "ring-2 ring-yellow-500" : ""
             }`}
           >
             <div className="text-2xl font-bold text-yellow-600 mb-1">
               {statusCounts.pending}
             </div>
-            <div className="text-sm text-charcoal/70">Pending</div>
+            <div className="text-sm text-gray-900/70">Pending</div>
           </Link>
           <Link
             href="/admin/orders?status=processing"
-            className={`bg-white rounded-lg luxury-shadow p-4 text-center hover:shadow-xl transition-all ${
+            className={`bg-white rounded-lg shadow-md p-4 text-center hover:shadow-xl transition-all ${
               searchParams.status === "processing" ? "ring-2 ring-blue-500" : ""
             }`}
           >
             <div className="text-2xl font-bold text-blue-600 mb-1">
               {statusCounts.processing}
             </div>
-            <div className="text-sm text-charcoal/70">Processing</div>
+            <div className="text-sm text-gray-900/70">Processing</div>
           </Link>
           <Link
             href="/admin/orders?status=shipped"
-            className={`bg-white rounded-lg luxury-shadow p-4 text-center hover:shadow-xl transition-all ${
+            className={`bg-white rounded-lg shadow-md p-4 text-center hover:shadow-xl transition-all ${
               searchParams.status === "shipped" ? "ring-2 ring-purple-500" : ""
             }`}
           >
             <div className="text-2xl font-bold text-purple-600 mb-1">
               {statusCounts.shipped}
             </div>
-            <div className="text-sm text-charcoal/70">Shipped</div>
+            <div className="text-sm text-gray-900/70">Shipped</div>
           </Link>
           <Link
             href="/admin/orders?status=delivered"
-            className={`bg-white rounded-lg luxury-shadow p-4 text-center hover:shadow-xl transition-all ${
+            className={`bg-white rounded-lg shadow-md p-4 text-center hover:shadow-xl transition-all ${
               searchParams.status === "delivered" ? "ring-2 ring-emerald-500" : ""
             }`}
           >
             <div className="text-2xl font-bold text-emerald-600 mb-1">
               {statusCounts.delivered}
             </div>
-            <div className="text-sm text-charcoal/70">Delivered</div>
+            <div className="text-sm text-gray-900/70">Delivered</div>
           </Link>
         </div>
 
         {/* Search */}
-        <div className="bg-white rounded-lg luxury-shadow p-4">
+        <div className="bg-white rounded-lg shadow-md p-4">
           <div className="flex items-center space-x-4">
             <div className="flex-1 relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-charcoal/40" />
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-900/40" />
               <input
                 type="text"
                 placeholder="Search by order number, customer name, or email..."
-                className="w-full pl-10 pr-4 py-2 border border-charcoal/20 rounded-lg focus:outline-none focus:ring-2 focus:ring-gold"
+                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
           </div>
         </div>
 
         {/* Orders Table */}
-        <div className="bg-white rounded-lg luxury-shadow overflow-hidden">
+        <div className="bg-white rounded-lg shadow-md overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full">
-              <thead className="bg-cream">
+              <thead className="bg-gray-50">
                 <tr>
-                  <th className="text-left py-4 px-6 font-semibold text-charcoal">
+                  <th className="text-left py-4 px-6 font-semibold text-gray-900">
                     Order #
                   </th>
-                  <th className="text-left py-4 px-6 font-semibold text-charcoal">
+                  <th className="text-left py-4 px-6 font-semibold text-gray-900">
                     Customer
                   </th>
-                  <th className="text-left py-4 px-6 font-semibold text-charcoal">
+                  <th className="text-left py-4 px-6 font-semibold text-gray-900">
                     Items
                   </th>
-                  <th className="text-left py-4 px-6 font-semibold text-charcoal">
+                  <th className="text-left py-4 px-6 font-semibold text-gray-900">
                     Total
                   </th>
-                  <th className="text-left py-4 px-6 font-semibold text-charcoal">
+                  <th className="text-left py-4 px-6 font-semibold text-gray-900">
                     Status
                   </th>
-                  <th className="text-left py-4 px-6 font-semibold text-charcoal">
+                  <th className="text-left py-4 px-6 font-semibold text-gray-900">
                     Payment
                   </th>
-                  <th className="text-left py-4 px-6 font-semibold text-charcoal">
+                  <th className="text-left py-4 px-6 font-semibold text-gray-900">
                     Date
                   </th>
-                  <th className="text-left py-4 px-6 font-semibold text-charcoal">
+                  <th className="text-left py-4 px-6 font-semibold text-gray-900">
                     Actions
                   </th>
                 </tr>
@@ -157,39 +157,39 @@ export default async function AdminOrdersPage({
                 {orders.length === 0 ? (
                   <tr>
                     <td colSpan={8} className="text-center py-12">
-                      <ShoppingBag className="w-16 h-16 text-charcoal/20 mx-auto mb-4" />
-                      <p className="text-charcoal/70">No orders found</p>
+                      <ShoppingBag className="w-16 h-16 text-gray-900/20 mx-auto mb-4" />
+                      <p className="text-gray-900/70">No orders found</p>
                     </td>
                   </tr>
                 ) : (
                   orders.map((order: any) => (
                     <tr
                       key={order._id}
-                      className="border-b border-charcoal/5 hover:bg-cream/50"
+                      className="border-b border-gray-200 hover:bg-gray-50/50"
                     >
                       <td className="py-4 px-6">
                         <Link
                           href={`/admin/orders/${order._id}`}
-                          className="font-semibold text-gold hover:underline"
+                          className="font-semibold text-blue-600 hover:underline"
                         >
                           {order.orderNumber || order._id.slice(-8)}
                         </Link>
                       </td>
                       <td className="py-4 px-6">
                         <div>
-                          <div className="font-medium text-charcoal">
+                          <div className="font-medium text-gray-900">
                             {order.shippingAddress?.name || "N/A"}
                           </div>
-                          <div className="text-sm text-charcoal/60">
+                          <div className="text-sm text-gray-900/60">
                             {order.shippingAddress?.email || "N/A"}
                           </div>
                         </div>
                       </td>
-                      <td className="py-4 px-6 text-charcoal/70">
+                      <td className="py-4 px-6 text-gray-900/70">
                         {order.items?.length || 0} item(s)
                       </td>
                       <td className="py-4 px-6">
-                        <span className="font-semibold text-charcoal">
+                        <span className="font-semibold text-gray-900">
                           £{order.total?.toFixed(2) || "0.00"}
                         </span>
                       </td>
@@ -225,7 +225,7 @@ export default async function AdminOrdersPage({
                           {order.paymentStatus || "pending"}
                         </span>
                       </td>
-                      <td className="py-4 px-6 text-charcoal/70 text-sm">
+                      <td className="py-4 px-6 text-gray-900/70 text-sm">
                         {order.createdAt
                           ? new Date(order.createdAt).toLocaleDateString("en-GB", {
                               day: "numeric",
@@ -237,7 +237,7 @@ export default async function AdminOrdersPage({
                       <td className="py-4 px-6">
                         <Link
                           href={`/admin/orders/${order._id}`}
-                          className="flex items-center space-x-1 text-gold hover:text-gold/80 transition-colors"
+                          className="flex items-center space-x-1 text-blue-600 hover:text-blue-600/80 transition-colors"
                         >
                           <Eye className="w-4 h-4" />
                           <span className="text-sm">View</span>

@@ -95,7 +95,7 @@ export default async function AdminDashboard() {
             value={`£${stats.totalRevenue.toLocaleString()}`}
             icon={DollarSign}
             href="/admin/analytics"
-            color="text-gold"
+            color="text-blue-600"
           />
         </div>
 
@@ -129,7 +129,7 @@ export default async function AdminDashboard() {
             </h2>
             <Link
               href="/admin/orders"
-              className="text-gold hover:text-gold/80 transition-colors"
+              className="text-blue-600 hover:text-blue-700 transition-colors"
             >
               View All →
             </Link>
@@ -170,7 +170,7 @@ export default async function AdminDashboard() {
                       <td className="py-3 px-4">
                         <Link
                           href={`/admin/orders/${order._id}`}
-                          className="text-gold hover:underline"
+                          className="text-blue-600 hover:underline"
                         >
                           {order.orderNumber || order._id.slice(-8)}
                         </Link>
@@ -217,7 +217,7 @@ export default async function AdminDashboard() {
             href="/admin/products/new"
             className="bg-white rounded-lg luxury-shadow p-6 hover:shadow-xl transition-shadow"
           >
-            <Package className="w-8 h-8 text-gold mb-4" />
+            <Package className="w-8 h-8 text-blue-600 mb-4" />
             <h3 className="text-xl font-semibold text-charcoal mb-2">
               Add New Product
             </h3>
@@ -230,7 +230,7 @@ export default async function AdminDashboard() {
             href="/admin/pricing"
             className="bg-white rounded-lg luxury-shadow p-6 hover:shadow-xl transition-shadow"
           >
-            <TrendingUp className="w-8 h-8 text-gold mb-4" />
+            <TrendingUp className="w-8 h-8 text-blue-600 mb-4" />
             <h3 className="text-xl font-semibold text-charcoal mb-2">
               Manage Pricing
             </h3>
@@ -243,7 +243,7 @@ export default async function AdminDashboard() {
             href="/admin/marketing"
             className="bg-white rounded-lg luxury-shadow p-6 hover:shadow-xl transition-shadow"
           >
-            <Mail className="w-8 h-8 text-gold mb-4" />
+            <Mail className="w-8 h-8 text-blue-600 mb-4" />
             <h3 className="text-xl font-semibold text-charcoal mb-2">
               Send Marketing
             </h3>
@@ -277,7 +277,7 @@ function StatCard({
     >
       <div className="flex items-center justify-between mb-4">
         <Icon className={`w-8 h-8 ${color}`} />
-        <span className="text-2xl font-bold text-charcoal group-hover:text-gold transition-colors">
+        <span className="text-2xl font-bold text-gray-900 group-hover:text-blue-600 transition-colors">
           {value}
         </span>
       </div>

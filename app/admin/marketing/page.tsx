@@ -27,80 +27,80 @@ export default async function AdminMarketingPage() {
       <div className="space-y-6">
         {/* Header */}
         <div>
-          <h1 className="text-4xl font-serif font-bold text-charcoal mb-2">
+          <h1 className="text-4xl font-serif font-bold text-gray-900 mb-2">
             Marketing Communications
           </h1>
-          <p className="text-charcoal/70">
+          <p className="text-gray-900/70">
             Send marketing messages via email and WhatsApp
           </p>
         </div>
 
         {/* Audience Stats */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div className="bg-white rounded-lg luxury-shadow p-6">
+          <div className="bg-white rounded-lg shadow-md p-6">
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-xl font-semibold text-charcoal">Email Audience</h2>
+              <h2 className="text-xl font-semibold text-gray-900">Email Audience</h2>
               <Mail className="w-8 h-8 text-blue-600" />
             </div>
-            <div className="text-3xl font-bold text-charcoal mb-2">
+            <div className="text-3xl font-bold text-gray-900 mb-2">
               {emailOptIn}
             </div>
-            <p className="text-sm text-charcoal/70">
+            <p className="text-sm text-gray-900/70">
               Users opted in for email marketing
             </p>
           </div>
 
-          <div className="bg-white rounded-lg luxury-shadow p-6">
+          <div className="bg-white rounded-lg shadow-md p-6">
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-xl font-semibold text-charcoal">WhatsApp Audience</h2>
+              <h2 className="text-xl font-semibold text-gray-900">WhatsApp Audience</h2>
               <MessageSquare className="w-8 h-8 text-emerald-600" />
             </div>
-            <div className="text-3xl font-bold text-charcoal mb-2">
+            <div className="text-3xl font-bold text-gray-900 mb-2">
               {whatsappOptIn}
             </div>
-            <p className="text-sm text-charcoal/70">
+            <p className="text-sm text-gray-900/70">
               Users opted in for WhatsApp marketing
             </p>
           </div>
         </div>
 
         {/* Email Campaign */}
-        <div className="bg-white rounded-lg luxury-shadow p-6">
-          <h2 className="text-2xl font-serif font-bold text-charcoal mb-6">
+        <div className="bg-white rounded-lg shadow-md p-6">
+          <h2 className="text-2xl font-serif font-bold text-gray-900 mb-6">
             Send Email Campaign
           </h2>
           <form className="space-y-4">
             <div>
-              <label className="block text-sm font-semibold text-charcoal mb-2">
+              <label className="block text-sm font-semibold text-gray-900 mb-2">
                 Subject
               </label>
               <input
                 type="text"
                 placeholder="Email subject..."
-                className="w-full px-4 py-2 border border-charcoal/20 rounded-lg focus:outline-none focus:ring-2 focus:ring-gold"
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
             <div>
-              <label className="block text-sm font-semibold text-charcoal mb-2">
+              <label className="block text-sm font-semibold text-gray-900 mb-2">
                 Message
               </label>
               <textarea
                 rows={6}
                 placeholder="Your marketing message..."
-                className="w-full px-4 py-2 border border-charcoal/20 rounded-lg focus:outline-none focus:ring-2 focus:ring-gold"
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
             <div className="flex items-center space-x-4">
               <label className="flex items-center">
-                <input type="checkbox" className="mr-2 accent-gold" />
-                <span className="text-sm text-charcoal/70">
+                <input type="checkbox" className="mr-2 accent-blue-600" />
+                <span className="text-sm text-gray-900/70">
                   Send to all email subscribers ({emailOptIn} users)
                 </span>
               </label>
             </div>
             <button
               type="submit"
-              className="flex items-center space-x-2 bg-gold text-white px-6 py-3 rounded-lg hover:bg-gold/90 transition-colors"
+              className="flex items-center space-x-2 bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-600/90 transition-colors"
             >
               <Send className="w-5 h-5" />
               <span>Send Email Campaign</span>
@@ -109,29 +109,29 @@ export default async function AdminMarketingPage() {
         </div>
 
         {/* WhatsApp Campaign */}
-        <div className="bg-white rounded-lg luxury-shadow p-6">
-          <h2 className="text-2xl font-serif font-bold text-charcoal mb-6">
+        <div className="bg-white rounded-lg shadow-md p-6">
+          <h2 className="text-2xl font-serif font-bold text-gray-900 mb-6">
             Send WhatsApp Campaign
           </h2>
           <form className="space-y-4">
             <div>
-              <label className="block text-sm font-semibold text-charcoal mb-2">
+              <label className="block text-sm font-semibold text-gray-900 mb-2">
                 Message
               </label>
               <textarea
                 rows={4}
                 placeholder="Your WhatsApp message (max 160 characters recommended)..."
                 maxLength={1000}
-                className="w-full px-4 py-2 border border-charcoal/20 rounded-lg focus:outline-none focus:ring-2 focus:ring-gold"
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
-              <p className="text-xs text-charcoal/60 mt-1">
+              <p className="text-xs text-gray-900/60 mt-1">
                 Note: WhatsApp Business API required. Messages must comply with WhatsApp policies.
               </p>
             </div>
             <div className="flex items-center space-x-4">
               <label className="flex items-center">
-                <input type="checkbox" className="mr-2 accent-gold" />
-                <span className="text-sm text-charcoal/70">
+                <input type="checkbox" className="mr-2 accent-blue-600" />
+                <span className="text-sm text-gray-900/70">
                   Send to all WhatsApp subscribers ({whatsappOptIn} users)
                 </span>
               </label>
@@ -147,12 +147,12 @@ export default async function AdminMarketingPage() {
         </div>
 
         {/* Campaign History */}
-        <div className="bg-white rounded-lg luxury-shadow p-6">
-          <h2 className="text-2xl font-serif font-bold text-charcoal mb-6">
+        <div className="bg-white rounded-lg shadow-md p-6">
+          <h2 className="text-2xl font-serif font-bold text-gray-900 mb-6">
             Recent Campaigns
           </h2>
-          <div className="text-center py-8 text-charcoal/70">
-            <Send className="w-16 h-16 mx-auto mb-4 text-charcoal/20" />
+          <div className="text-center py-8 text-gray-900/70">
+            <Send className="w-16 h-16 mx-auto mb-4 text-gray-900/20" />
             <p>No campaigns sent yet</p>
             <p className="text-sm mt-2">
               Start sending marketing communications to your audience
@@ -161,36 +161,36 @@ export default async function AdminMarketingPage() {
         </div>
 
         {/* Audience Management */}
-        <div className="bg-white rounded-lg luxury-shadow p-6">
-          <h2 className="text-2xl font-serif font-bold text-charcoal mb-6">
+        <div className="bg-white rounded-lg shadow-md p-6">
+          <h2 className="text-2xl font-serif font-bold text-gray-900 mb-6">
             Audience Management
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              <h3 className="font-semibold text-charcoal mb-4">Email Subscribers</h3>
+              <h3 className="font-semibold text-gray-900 mb-4">Email Subscribers</h3>
               <div className="space-y-2">
-                <div className="flex items-center justify-between p-3 bg-cream rounded-lg">
-                  <span className="text-charcoal/70">Total Subscribers</span>
+                <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                  <span className="text-gray-900/70">Total Subscribers</span>
                   <span className="font-semibold">{emailOptIn}</span>
                 </div>
                 <Link
                   href="/admin/users?filter=emailOptIn"
-                  className="block text-center text-gold hover:text-gold/80 transition-colors py-2"
+                  className="block text-center text-blue-600 hover:text-blue-600/80 transition-colors py-2"
                 >
                   View Subscribers →
                 </Link>
               </div>
             </div>
             <div>
-              <h3 className="font-semibold text-charcoal mb-4">WhatsApp Subscribers</h3>
+              <h3 className="font-semibold text-gray-900 mb-4">WhatsApp Subscribers</h3>
               <div className="space-y-2">
-                <div className="flex items-center justify-between p-3 bg-cream rounded-lg">
-                  <span className="text-charcoal/70">Total Subscribers</span>
+                <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                  <span className="text-gray-900/70">Total Subscribers</span>
                   <span className="font-semibold">{whatsappOptIn}</span>
                 </div>
                 <Link
                   href="/admin/users?filter=whatsappOptIn"
-                  className="block text-center text-gold hover:text-gold/80 transition-colors py-2"
+                  className="block text-center text-blue-600 hover:text-blue-600/80 transition-colors py-2"
                 >
                   View Subscribers →
                 </Link>
