@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { fetchAndCachePrices, isApiKeyMissingError } from "@/lib/gold-price/scheduled-fetcher";
 import { updateAllProductPrices } from "@/lib/gold-price/product-price-updater";
 import { logPriceUpdate } from "@/lib/gold-price/monitoring";
+import { getServerSession } from "@/lib/auth/session";
 
 export const dynamic = "force-dynamic";
 
