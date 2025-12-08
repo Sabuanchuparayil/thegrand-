@@ -17,89 +17,80 @@ const providers: Provider[] = [
       password: { label: "Password", type: "password" },
     },
     async authorize(credentials) {
+      if (!credentials?.email || !credentials?.password) {
+        return null;
+      }
+
+      const email = credentials.email as string;
+      const password = credentials.password as string;
+
+      // Check if email is an admin email
+      const adminEmails = [
+        "admin@thegrand.com",
+        "admin@thegrand.co.uk",
+        "admin@thegrand.luxury",
+        process.env.ADMIN_EMAIL || "",
+      ].filter(Boolean);
+      
+      const isAdminEmail = adminEmails.some(adminEmail => 
+        email.toLowerCase() === adminEmail.toLowerCase()
+      );
+
+      // For now, we'll use a simple email-based auth
+      // In production, you should hash passwords and store them
       try {
-        if (!credentials?.email || !credentials?.password) {
-          return null;
-        }
+        const user = await getUserByEmail(email);
 
-        const email = credentials.email as string;
-        const password = credentials.password as string;
-
-        // For now, we'll use a simple email-based auth
-        // In production, you should hash passwords and store them
-        try {
-          const user = await getUserByEmail(email);
-
-          if (!user || !user.isActive) {
-            // Auto-create user if doesn't exist (for demo purposes)
-            // In production, implement proper registration flow
-            try {
-              // Check if email is an admin email
-              const adminEmails = [
-                "admin@thegrand.com",
-                "admin@thegrand.co.uk",
-                "admin@thegrand.luxury",
-                process.env.ADMIN_EMAIL || "",
-              ].filter(Boolean);
-              
-              const isAdminEmail = adminEmails.some(adminEmail => 
-                email.toLowerCase() === adminEmail.toLowerCase()
-              );
-              
-              const newUser = await createUser({
-                email: email,
-                name: email.split("@")[0],
-                phone: "",
-                role: isAdminEmail ? "admin" : "customer",
-              });
-              return newUser ? {
+        if (!user || !user.isActive) {
+          // Auto-create user if doesn't exist (for demo purposes)
+          // In production, implement proper registration flow
+          try {
+            const newUser = await createUser({
+              email: email,
+              name: email.split("@")[0],
+              phone: "",
+              role: isAdminEmail ? "admin" : "customer",
+            });
+            if (newUser) {
+              return {
                 id: newUser._id,
                 email: newUser.email,
                 name: newUser.name,
                 role: newUser.role,
-              } : null;
-            } catch (createError) {
-              console.error("Error creating user:", createError);
-              // Return a demo user if Sanity is not configured
-              const adminEmails = [
-                "admin@thegrand.com",
-                "admin@thegrand.co.uk",
-                "admin@thegrand.luxury",
-                process.env.ADMIN_EMAIL || "",
-              ].filter(Boolean);
-              const isAdminEmail = adminEmails.some(adminEmail => 
-                email.toLowerCase() === adminEmail.toLowerCase()
-              );
-              return {
-                id: `demo-${Date.now()}`,
-                email: email,
-                name: email.split("@")[0],
-                role: isAdminEmail ? "admin" : "customer",
               };
             }
+          } catch (createError) {
+            console.error("Error creating user:", createError);
+            // Fall through to return demo user
           }
-
-          // TODO: Verify password hash
-          // For now, accept any password for existing users
-          return {
-            id: user._id,
-            email: user.email,
-            name: user.name,
-            role: user.role,
-          };
-        } catch (dbError) {
-          console.error("Database error in auth:", dbError);
-          // Return a demo user if database is not available
+          
+          // Return a demo user if Sanity is not configured or creation failed
           return {
             id: `demo-${Date.now()}`,
             email: email,
             name: email.split("@")[0],
-            role: "customer",
+            role: isAdminEmail ? "admin" : "customer",
           };
         }
-      } catch (error) {
-        console.error("Auth error:", error);
-        return null;
+
+        // TODO: Verify password hash
+        // For now, accept any password for existing users
+        return {
+          id: user._id,
+          email: user.email,
+          name: user.name,
+          role: user.role,
+        };
+      } catch (dbError) {
+        console.error("Database error in auth:", dbError);
+        // Always return a demo user if database is not available
+        // This ensures admin emails can still log in
+        return {
+          id: `demo-${Date.now()}`,
+          email: email,
+          name: email.split("@")[0],
+          role: isAdminEmail ? "admin" : "customer",
+        };
       }
     },
   }),
