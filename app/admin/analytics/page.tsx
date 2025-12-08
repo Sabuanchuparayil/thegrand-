@@ -95,7 +95,7 @@ export default async function AdminAnalyticsPage() {
             <StatusCard
               label="Pending"
               count={ordersByStatus.pending}
-              color="bg-yellow-100 text-yellow-800"
+              color="bg-blue-100 text-blue-800"
             />
             <StatusCard
               label="Processing"
@@ -172,7 +172,7 @@ export default async function AdminAnalyticsPage() {
                         <span
                           className={`px-2 py-1 rounded-full text-xs font-semibold ${
                             (order.status || order.orderStatus) === "pending"
-                              ? "bg-yellow-100 text-yellow-800"
+                              ? "bg-blue-100 text-blue-800"
                               : (order.status || order.orderStatus) === "delivered"
                               ? "bg-emerald-100 text-emerald-800"
                               : "bg-gray-100 text-gray-800"

@@ -92,19 +92,24 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     console.error("Error in scheduled price fetch:", error);
 
+    const errorMessage = error instanceof Error ? error.message : "Unknown error";
+    const isApiKeyMissing = error instanceof Error && (error as any).code === "API_KEY_MISSING";
+
     // Log the error
     await logPriceUpdate({
       timestamp: new Date().toISOString(),
       success: false,
-      errors: [error instanceof Error ? error.message : "Unknown error"],
+      errors: [errorMessage],
     });
 
     return NextResponse.json(
       {
         success: false,
         error: "Failed to fetch and cache prices",
-        message:
-          error instanceof Error ? error.message : "Unknown error occurred",
+        message: errorMessage,
+        ...(isApiKeyMissing && {
+          help: "To fix this issue, set the METALS_API_KEY environment variable in Railway. Go to Railway Dashboard > Your Project > Variables, and add METALS_API_KEY with your Metals.Dev API key. Get your API key at https://metals.dev/",
+        }),
       },
       { status: 500 }
     );

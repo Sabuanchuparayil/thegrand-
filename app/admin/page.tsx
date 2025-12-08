@@ -182,7 +182,7 @@ export default async function AdminDashboard() {
                         <span
                           className={`px-2 py-1 rounded-full text-xs font-semibold ${
                             (order.status || order.orderStatus) === "pending"
-                              ? "bg-yellow-100 text-yellow-800"
+                              ? "bg-blue-100 text-blue-800"
                               : (order.status || order.orderStatus) === "processing"
                               ? "bg-blue-100 text-blue-800"
                               : (order.status || order.orderStatus) === "shipped"

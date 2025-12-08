@@ -67,7 +67,7 @@ export default async function AdminOrdersPage({
               searchParams.status === "pending" ? "ring-2 ring-yellow-500" : ""
             }`}
           >
-            <div className="text-2xl font-bold text-yellow-600 mb-1">
+            <div className="text-2xl font-bold text-blue-600 mb-1">
               {statusCounts.pending}
             </div>
             <div className="text-sm text-gray-900/70">Pending</div>
@@ -197,7 +197,7 @@ export default async function AdminOrdersPage({
                         <span
                           className={`px-2 py-1 rounded-full text-xs font-semibold ${
                             (order.status || order.orderStatus) === "pending"
-                              ? "bg-yellow-100 text-yellow-800"
+                              ? "bg-blue-100 text-blue-800"
                               : (order.status || order.orderStatus) === "processing"
                               ? "bg-blue-100 text-blue-800"
                               : (order.status || order.orderStatus) === "shipped"
@@ -218,7 +218,7 @@ export default async function AdminOrdersPage({
                             order.paymentStatus === "paid"
                               ? "bg-emerald-100 text-emerald-800"
                               : order.paymentStatus === "pending"
-                              ? "bg-yellow-100 text-yellow-800"
+                              ? "bg-blue-100 text-blue-800"
                               : "bg-red-100 text-red-800"
                           }`}
                         >

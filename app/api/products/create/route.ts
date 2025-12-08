@@ -28,7 +28,8 @@ export async function POST(request: NextRequest) {
       price,
       category,
       material_type,
-      gemstone_type,
+      gemstone_type, // Keep for backward compatibility
+      stones,
       gold_weight,
       cultural_tags,
       featured,
@@ -48,7 +49,7 @@ export async function POST(request: NextRequest) {
       .replace(/[^a-z0-9]+/g, "-")
       .replace(/(^-|-$)/g, "");
 
-    const productData = {
+    const productData: any = {
       _type: "product",
       name,
       slug: {
@@ -59,12 +60,19 @@ export async function POST(request: NextRequest) {
       price: parseFloat(price),
       category,
       material_type: material_type || undefined,
-      gemstone_type: gemstone_type || undefined,
       gold_weight: gold_weight ? parseFloat(gold_weight) : undefined,
       cultural_tags: cultural_tags || [],
       featured: featured || false,
       pricing_model: pricing_model || "fixed",
     };
+
+    // Handle stones array (preferred) or legacy gemstone_type
+    if (stones && Array.isArray(stones) && stones.length > 0) {
+      productData.stones = stones.filter((stone: any) => stone && stone.type);
+    } else if (gemstone_type && gemstone_type !== "None") {
+      // Backward compatibility: convert single gemstone_type to stones array
+      productData.gemstone_type = gemstone_type;
+    }
 
     const product = await client.create(productData);
 

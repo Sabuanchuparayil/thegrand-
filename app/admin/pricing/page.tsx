@@ -48,7 +48,7 @@ export default async function AdminPricingPage() {
 
         {/* System Health */}
         <div className={`rounded-lg shadow-md p-6 ${
-          systemHealth.status === "healthy" ? "bg-emerald-50 border border-emerald-200" : "bg-yellow-50 border border-yellow-200"
+          systemHealth.status === "healthy" ? "bg-emerald-50 border border-emerald-200" : "bg-blue-50 border border-blue-200"
         }`}>
           <div className="flex items-center justify-between">
             <div>
@@ -166,7 +166,7 @@ export default async function AdminPricingPage() {
                       log.level === "error"
                         ? "bg-red-100 text-red-800"
                         : log.level === "warn"
-                        ? "bg-yellow-100 text-yellow-800"
+                        ? "bg-blue-100 text-blue-800"
                         : "bg-emerald-100 text-emerald-800"
                     }`}
                   >

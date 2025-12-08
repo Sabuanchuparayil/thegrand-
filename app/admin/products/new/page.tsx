@@ -16,7 +16,7 @@ export default function NewProductPage() {
     price: "",
     category: "",
     material_type: "",
-    gemstone_type: "",
+    stones: [] as Array<{ type: string; size?: string; weight?: number; quantity?: number }>,
     gold_weight: "",
     cultural_tags: [] as string[],
     featured: false,
@@ -40,8 +40,31 @@ export default function NewProductPage() {
     "Sapphire",
     "Emerald",
     "Pearl",
-    "None",
+    "Other",
   ];
+
+  const handleStoneChange = (index: number, field: string, value: any) => {
+    const newStones = [...formData.stones];
+    if (!newStones[index]) {
+      newStones[index] = { type: "", quantity: 1 };
+    }
+    newStones[index] = { ...newStones[index], [field]: value };
+    setFormData((prev) => ({ ...prev, stones: newStones }));
+  };
+
+  const addStone = () => {
+    setFormData((prev) => ({
+      ...prev,
+      stones: [...prev.stones, { type: "", quantity: 1 }],
+    }));
+  };
+
+  const removeStone = (index: number) => {
+    setFormData((prev) => ({
+      ...prev,
+      stones: prev.stones.filter((_, i) => i !== index),
+    }));
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -60,6 +83,7 @@ export default function NewProductPage() {
           gold_weight: formData.gold_weight
             ? parseFloat(formData.gold_weight)
             : undefined,
+          stones: formData.stones.filter((stone) => stone.type), // Only send stones with type
         }),
       });
 
@@ -106,12 +130,12 @@ export default function NewProductPage() {
 
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="bg-white rounded-lg shadow-md p-6">
-            <h2 className="text-2xl font-semibold text-charcoal mb-4">
+            <h2 className="text-2xl font-semibold text-gray-900 mb-4">
               Basic Information
             </h2>
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-semibold text-charcoal mb-2">
+                <label className="block text-sm font-semibold text-gray-900 mb-2">
                   Product Name *
                 </label>
                 <input
@@ -126,7 +150,7 @@ export default function NewProductPage() {
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-charcoal mb-2">
+                <label className="block text-sm font-semibold text-gray-900 mb-2">
                   Description *
                 </label>
                 <textarea
@@ -145,7 +169,7 @@ export default function NewProductPage() {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-semibold text-charcoal mb-2">
+                  <label className="block text-sm font-semibold text-gray-900 mb-2">
                     Price (GBP) *
                   </label>
                   <input
@@ -164,7 +188,7 @@ export default function NewProductPage() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-charcoal mb-2">
+                  <label className="block text-sm font-semibold text-gray-900 mb-2">
                     Category *
                   </label>
                   <select
@@ -196,7 +220,7 @@ export default function NewProductPage() {
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-semibold text-charcoal mb-2">
+                <label className="block text-sm font-semibold text-gray-900 mb-2">
                   Material Type
                 </label>
                 <select
@@ -218,31 +242,94 @@ export default function NewProductPage() {
                 </select>
               </div>
 
-              <div>
-                <label className="block text-sm font-semibold text-charcoal mb-2">
-                  Gemstone Type
+              <div className="md:col-span-2">
+                <label className="block text-sm font-semibold text-gray-900 mb-2">
+                  Stones / Gemstones
                 </label>
-                <select
-                  value={formData.gemstone_type}
-                  onChange={(e) =>
-                    setFormData((prev) => ({
-                      ...prev,
-                      gemstone_type: e.target.value,
-                    }))
-                  }
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                >
-                  <option value="">Select gemstone</option>
-                  {gemstoneTypes.map((type) => (
-                    <option key={type} value={type}>
-                      {type}
-                    </option>
+                <div className="space-y-3">
+                  {formData.stones.map((stone, index) => (
+                    <div
+                      key={index}
+                      className="flex items-start gap-3 p-3 bg-gray-50 rounded-lg border border-gray-200"
+                    >
+                      <div className="flex-1 grid grid-cols-1 md:grid-cols-4 gap-3">
+                        <select
+                          required
+                          value={stone.type || ""}
+                          onChange={(e) =>
+                            handleStoneChange(index, "type", e.target.value)
+                          }
+                          className="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        >
+                          <option value="">Select stone type</option>
+                          {gemstoneTypes.map((type) => (
+                            <option key={type} value={type}>
+                              {type}
+                            </option>
+                          ))}
+                        </select>
+                        <input
+                          type="text"
+                          placeholder="Size (e.g., 2.5ct, 5mm)"
+                          value={stone.size || ""}
+                          onChange={(e) =>
+                            handleStoneChange(index, "size", e.target.value)
+                          }
+                          className="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        />
+                        <input
+                          type="number"
+                          step="0.01"
+                          placeholder="Weight (carats)"
+                          value={stone.weight || ""}
+                          onChange={(e) =>
+                            handleStoneChange(
+                              index,
+                              "weight",
+                              e.target.value ? parseFloat(e.target.value) : undefined
+                            )
+                          }
+                          className="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        />
+                        <input
+                          type="number"
+                          min="1"
+                          placeholder="Quantity"
+                          value={stone.quantity || 1}
+                          onChange={(e) =>
+                            handleStoneChange(
+                              index,
+                              "quantity",
+                              parseInt(e.target.value) || 1
+                            )
+                          }
+                          className="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        />
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => removeStone(index)}
+                        className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                      >
+                        <X className="w-4 h-4" />
+                      </button>
+                    </div>
                   ))}
-                </select>
+                  <button
+                    type="button"
+                    onClick={addStone}
+                    className="w-full px-4 py-2 border-2 border-dashed border-gray-300 rounded-lg text-gray-600 hover:border-blue-500 hover:text-blue-600 transition-colors"
+                  >
+                    + Add Stone
+                  </button>
+                </div>
+                <p className="text-xs text-gray-500 mt-2">
+                  Add multiple stones to your product. Leave empty if no stones.
+                </p>
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-charcoal mb-2">
+                <label className="block text-sm font-semibold text-gray-900 mb-2">
                   Gold Weight (grams)
                 </label>
                 <input
@@ -260,7 +347,7 @@ export default function NewProductPage() {
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-charcoal mb-2">
+                <label className="block text-sm font-semibold text-gray-900 mb-2">
                   Pricing Model
                 </label>
                 <select
@@ -292,7 +379,7 @@ export default function NewProductPage() {
                   }
                   className="w-4 h-4"
                 />
-                <span className="text-sm font-semibold text-charcoal">
+                <span className="text-sm font-semibold text-gray-900">
                   Featured Product
                 </span>
               </label>
@@ -317,7 +404,7 @@ export default function NewProductPage() {
           <div className="flex items-center justify-end space-x-4">
             <Link
               href="/admin/products"
-              className="px-6 py-3 bg-gray-200 text-charcoal rounded-lg hover:bg-gray-300 transition-colors"
+              className="px-6 py-3 bg-gray-200 text-gray-900 rounded-lg hover:bg-gray-300 transition-colors"
             >
               Cancel
             </Link>

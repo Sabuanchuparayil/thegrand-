@@ -17,7 +17,9 @@ async function fetchAllMetalPrices(currency: string = "GBP"): Promise<{
     process.env.METALS_API_BASE_URL || "https://api.metals.dev/v1";
 
   if (!apiKey) {
-    throw new Error("METALS_API_KEY not set");
+    const error = new Error("METALS_API_KEY not set. Please configure METALS_API_KEY in Railway environment variables.");
+    (error as any).code = "API_KEY_MISSING";
+    throw error;
   }
 
   // Single API call to fetch all metals
