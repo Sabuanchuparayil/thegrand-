@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { fetchAndCachePrices } from "@/lib/gold-price/scheduled-fetcher";
+import { fetchAndCachePrices, isApiKeyMissingError } from "@/lib/gold-price/scheduled-fetcher";
 import { updateAllProductPrices } from "@/lib/gold-price/product-price-updater";
 import { logPriceUpdate } from "@/lib/gold-price/monitoring";
 
@@ -93,7 +93,8 @@ export async function POST(request: NextRequest) {
     console.error("Error in scheduled price fetch:", error);
 
     const errorMessage = error instanceof Error ? error.message : "Unknown error";
-    const isApiKeyMissing = error instanceof Error && (error as any).code === "API_KEY_MISSING";
+    // Use the type guard instead of unsafe casting
+    const isApiKeyMissing = isApiKeyMissingError(error);
 
     // Log the error
     await logPriceUpdate({

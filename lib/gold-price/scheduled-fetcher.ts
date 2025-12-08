@@ -5,6 +5,29 @@
 import { saveStoredPrices, loadStoredPrices, StoredMetalPrices } from "./price-storage";
 
 /**
+ * Custom error class for API key missing errors
+ */
+export class ApiKeyMissingError extends Error {
+  code = "API_KEY_MISSING" as const;
+  
+  constructor(message: string) {
+    super(message);
+    this.name = "ApiKeyMissingError";
+  }
+}
+
+/**
+ * Type guard to check if an error is an ApiKeyMissingError
+ */
+function isApiKeyMissingError(error: unknown): error is ApiKeyMissingError {
+  return (
+    error instanceof Error &&
+    "code" in error &&
+    (error as { code?: string }).code === "API_KEY_MISSING"
+  );
+}
+
+/**
  * Fetch all metal prices in a single API call
  * This is the main function called by scheduled jobs
  */
@@ -17,9 +40,9 @@ async function fetchAllMetalPrices(currency: string = "GBP"): Promise<{
     process.env.METALS_API_BASE_URL || "https://api.metals.dev/v1";
 
   if (!apiKey) {
-    const error = new Error("METALS_API_KEY not set. Please configure METALS_API_KEY in Railway environment variables.");
-    (error as any).code = "API_KEY_MISSING";
-    throw error;
+    throw new ApiKeyMissingError(
+      "METALS_API_KEY not set. Please configure METALS_API_KEY in Railway environment variables."
+    );
   }
 
   // Single API call to fetch all metals
@@ -114,3 +137,5 @@ export async function loadCachedPrices(): Promise<StoredMetalPrices | null> {
   return loadStoredPrices();
 }
 
+// Export the type guard for use in API routes
+export { isApiKeyMissingError };
