@@ -14,16 +14,31 @@ export const dynamic = "force-dynamic";
  */
 export async function POST(request: NextRequest) {
   try {
-    // Verify authentication
+    // Verify authentication - allow either CRON_SECRET or admin session
     const authHeader = request.headers.get("authorization");
     const cronSecret = process.env.CRON_SECRET;
     
+    // Check for CRON_SECRET authentication (for scheduled jobs)
     if (cronSecret) {
-      if (!authHeader || authHeader !== `Bearer ${cronSecret}`) {
-        return NextResponse.json(
-          { error: "Unauthorized" },
-          { status: 401 }
-        );
+      if (authHeader && authHeader === `Bearer ${cronSecret}`) {
+        // Authenticated via CRON_SECRET, proceed
+      } else {
+        // If CRON_SECRET is set but not provided, check for admin session
+        const session = await getServerSession();
+        if (!session) {
+          return NextResponse.json(
+            { error: "Unauthorized" },
+            { status: 401 }
+          );
+        }
+        const userRole = (session.user as any)?.role;
+        if (userRole !== "admin" && userRole !== "manager") {
+          return NextResponse.json(
+            { error: "Unauthorized - Admin access required" },
+            { status: 403 }
+          );
+        }
+        // Admin authenticated, proceed
       }
     }
 

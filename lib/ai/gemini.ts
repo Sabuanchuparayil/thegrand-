@@ -1,10 +1,19 @@
 // Gemini AI integration for customer support
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
-const API_KEY = process.env.GEMINI_API_KEY || "AIzaSyAnKlqZqtK4RQuX1B0rfzF3Gv08Qxh2xfk";
+const API_KEY = process.env.GEMINI_API_KEY;
 
-// Initialize Gemini
-const genAI = new GoogleGenerativeAI(API_KEY);
+// Initialize Gemini only if API key is available
+let genAI: GoogleGenerativeAI | null = null;
+if (API_KEY) {
+  try {
+    genAI = new GoogleGenerativeAI(API_KEY);
+  } catch (error) {
+    console.error("Failed to initialize Gemini AI:", error);
+  }
+} else {
+  console.warn("GEMINI_API_KEY not set. Gemini AI features will be disabled.");
+}
 
 // Knowledge base about The Grand products and services
 const KNOWLEDGE_BASE = `
@@ -115,8 +124,13 @@ export interface ChatMessage {
  * Initialize Gemini model with knowledge base
  */
 function getModel() {
+  if (!genAI) {
+    throw new Error("Gemini AI is not initialized. Please set GEMINI_API_KEY environment variable.");
+  }
+  
+  // Use gemini-1.5-flash for faster responses, or gemini-1.5-pro for better quality
   const model = genAI.getGenerativeModel({ 
-    model: "gemini-pro",
+    model: "gemini-1.5-flash", // Updated to newer model
     systemInstruction: `You are Sabuji, a helpful customer support agent for The Grand, a luxury jewelry brand. 
     
 Use the following knowledge base to answer customer questions accurately and helpfully:
@@ -131,7 +145,8 @@ Guidelines:
 - Maintain a luxury brand tone while being approachable
 - For pricing questions, mention that prices are dynamic based on gold market rates
 - Encourage customers to use AR Try-On feature for virtual try-ons
-- Mention cultural collections when relevant to customer interests`,
+- Mention cultural collections when relevant to customer interests
+- Answer questions about store inauguration, opening hours, and events if asked`,
   });
   return model;
 }
@@ -144,6 +159,10 @@ export async function generateResponse(
   conversationHistory: ChatMessage[] = []
 ): Promise<string> {
   try {
+    if (!genAI) {
+      throw new Error("GEMINI_API_KEY not configured. Please set the GEMINI_API_KEY environment variable in Railway.");
+    }
+    
     const model = getModel();
     
     // Build conversation context
@@ -160,10 +179,28 @@ export async function generateResponse(
     const response = await result.response;
     const text = response.text();
     
+    if (!text || text.trim().length === 0) {
+      throw new Error("Empty response from Gemini API");
+    }
+    
     return text;
   } catch (error) {
     console.error("Gemini API error:", error);
-    return "I apologize, but I'm having trouble processing your request right now. Please try again later or contact our customer service team directly.";
+    
+    // Provide more specific error messages
+    if (error instanceof Error) {
+      if (error.message.includes("API_KEY") || error.message.includes("GEMINI_API_KEY")) {
+        return "I apologize, but the AI service is not properly configured. Please contact our customer service team directly, or the administrator can set up the GEMINI_API_KEY in Railway environment variables.";
+      }
+      if (error.message.includes("quota") || error.message.includes("rate limit")) {
+        return "I'm currently experiencing high demand. Please try again in a moment or contact our customer service team directly.";
+      }
+      if (error.message.includes("safety")) {
+        return "I apologize, but I couldn't process that request due to content safety filters. Please rephrase your question or contact our customer service team.";
+      }
+    }
+    
+    return "I apologize, but I'm having trouble processing your request right now. Please try again later or contact our customer service team directly at support@thegrand.co.uk.";
   }
 }
 
@@ -174,6 +211,9 @@ export async function getProductRecommendations(
   customerQuery: string
 ): Promise<string[]> {
   try {
+    if (!genAI) {
+      return [];
+    }
     const model = getModel();
     
     const prompt = `Based on this customer query: "${customerQuery}"
@@ -213,6 +253,9 @@ export async function categorizeQuery(query: string): Promise<{
   confidence: number;
 }> {
   try {
+    if (!genAI) {
+      return { category: "general", confidence: 0.5 };
+    }
     const model = getModel();
     
     const prompt = `Categorize this customer query: "${query}"
