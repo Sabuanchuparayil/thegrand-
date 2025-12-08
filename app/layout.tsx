@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import { Providers } from "./providers";
 
@@ -11,10 +11,16 @@ export const metadata: Metadata = {
     description: "A global luxury jewelry house rooted in craftsmanship",
     type: "website",
   },
-  viewport: "width=device-width, initial-scale=1, maximum-scale=5",
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
 };
 
 import CookieConsent from "@/components/CookieConsent";
+import ChatSupport from "@/components/ChatSupport";
 
 export default function RootLayout({
   children,
@@ -27,6 +33,7 @@ export default function RootLayout({
         <Providers>
           {children}
           <CookieConsent />
+          <ChatSupport />
         </Providers>
       </body>
     </html>

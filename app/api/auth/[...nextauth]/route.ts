@@ -7,6 +7,7 @@ import { getUserByEmail, createUser } from "@/lib/auth/auth";
 import type { NextRequest } from "next/server";
 
 const authOptions = {
+  trustHost: true, // Fixes Railway deployment UntrustedHost error
   providers: [
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID || "",
@@ -47,10 +48,23 @@ const authOptions = {
               // Auto-create user if doesn't exist (for demo purposes)
               // In production, implement proper registration flow
               try {
+                // Check if email is an admin email
+                const adminEmails = [
+                  "admin@thegrand.com",
+                  "admin@thegrand.co.uk",
+                  "admin@thegrand.luxury",
+                  process.env.ADMIN_EMAIL || "",
+                ].filter(Boolean);
+                
+                const isAdminEmail = adminEmails.some(adminEmail => 
+                  email.toLowerCase() === adminEmail.toLowerCase()
+                );
+                
                 const newUser = await createUser({
                   email: email,
                   name: email.split("@")[0],
                   phone: "",
+                  role: isAdminEmail ? "admin" : "customer",
                 });
                 return newUser ? {
                   id: newUser._id,
@@ -61,11 +75,20 @@ const authOptions = {
               } catch (createError) {
                 console.error("Error creating user:", createError);
                 // Return a demo user if Sanity is not configured
+                const adminEmails = [
+                  "admin@thegrand.com",
+                  "admin@thegrand.co.uk",
+                  "admin@thegrand.luxury",
+                  process.env.ADMIN_EMAIL || "",
+                ].filter(Boolean);
+                const isAdminEmail = adminEmails.some(adminEmail => 
+                  email.toLowerCase() === adminEmail.toLowerCase()
+                );
                 return {
                   id: `demo-${Date.now()}`,
                   email: email,
                   name: email.split("@")[0],
-                  role: "customer",
+                  role: isAdminEmail ? "admin" : "customer",
                 };
               }
             }
