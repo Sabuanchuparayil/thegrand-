@@ -1,3 +1,6 @@
+export const dynamic = 'force-dynamic';
+export const dynamic = 'force-dynamic';
+
 import { getServerSession } from "@/lib/auth/session";
 import { redirect } from "next/navigation";
 import AdminLayout from "../layout";
