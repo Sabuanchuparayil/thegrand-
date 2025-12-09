@@ -25,7 +25,8 @@ This will open your browser to authenticate.
 ### Step 3: Link to Your Project
 
 ```bash
-cd "/Users/apple/Desktop/Grand Gold/The grand -Sabu"
+# Navigate to your project directory
+cd /path/to/your/project
 railway link
 ```
 
@@ -168,7 +169,8 @@ After setting the variable:
 If you have Railway CLI installed and are logged in:
 
 ```bash
-cd "/Users/apple/Desktop/Grand Gold/The grand -Sabu"
+# Navigate to your project directory
+cd /path/to/your/project
 railway link
 railway variables --set "METALS_API_KEY=YOUR_API_KEY"
 railway variables
