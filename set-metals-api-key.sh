@@ -2,7 +2,7 @@
 
 # Script to set METALS_API_KEY in Railway
 # Usage: ./set-metals-api-key.sh YOUR_API_KEY
-# Example: ./set-metals-api-key.sh FQHZW3O4SJ8R57KX3QBP714KX3QBP
+# Example: ./set-metals-api-key.sh YOUR_METALS_DEV_API_KEY
 #
 # Make sure Railway CLI is installed: npm install -g @railway/cli
 # Make sure you're logged in: railway login
@@ -12,7 +12,7 @@ if [ -z "$1" ]; then
     echo "❌ Error: API key is required"
     echo ""
     echo "Usage: $0 YOUR_API_KEY"
-    echo "Example: $0 FQHZW3O4SJ8R57KX3QBP714KX3QBP"
+    echo "Example: $0 YOUR_METALS_DEV_API_KEY"
     echo ""
     echo "Get your API key from: https://metals.dev/"
     exit 1
