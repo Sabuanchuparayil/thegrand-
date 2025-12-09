@@ -225,23 +225,53 @@ Assistant: Please provide a helpful response about The Grand's products and serv
     
     // Provide more specific error messages
     if (error instanceof Error) {
-      if (error.message.includes("API_KEY") || error.message.includes("GEMINI_API_KEY")) {
-        return "I apologize, but the AI service is not properly configured. Please contact our customer service team directly, or the administrator can set up the GEMINI_API_KEY in Railway environment variables.";
+      const errorMessage = error.message.toLowerCase();
+      const errorName = error.name.toLowerCase();
+      
+      // Check for API key issues
+      if (errorMessage.includes("api_key") || errorMessage.includes("gemini_api_key") || errorMessage.includes("invalid api key")) {
+        console.error("Gemini API Key Error - Key may be invalid or expired");
+        return "I apologize, but the AI service is not properly configured. Please contact our customer service team directly, or the administrator can verify the GEMINI_API_KEY in Railway environment variables.";
       }
-      if (error.message.includes("quota") || error.message.includes("rate limit")) {
+      
+      // Check for quota/rate limit issues
+      if (errorMessage.includes("quota") || errorMessage.includes("rate limit") || errorMessage.includes("429")) {
+        console.error("Gemini API Quota/Rate Limit Error");
         return "I'm currently experiencing high demand. Please try again in a moment or contact our customer service team directly.";
       }
-      if (error.message.includes("safety")) {
+      
+      // Check for safety filter issues
+      if (errorMessage.includes("safety") || errorMessage.includes("blocked") || errorMessage.includes("content filter")) {
+        console.error("Gemini API Safety Filter Error");
         return "I apologize, but I couldn't process that request due to content safety filters. Please rephrase your question or contact our customer service team.";
       }
+      
+      // Check for network/connection issues
+      if (errorMessage.includes("fetch") || errorMessage.includes("network") || errorMessage.includes("timeout") || errorMessage.includes("econnrefused")) {
+        console.error("Gemini API Network Error");
+        return "I'm having trouble connecting to the AI service. Please try again in a moment or contact our customer service team directly.";
+      }
+      
+      // Check for authentication errors
+      if (errorMessage.includes("unauthorized") || errorMessage.includes("401") || errorMessage.includes("403")) {
+        console.error("Gemini API Authentication Error");
+        return "I apologize, but there's an authentication issue with the AI service. Please contact our customer service team directly.";
+      }
+      
       // Log the actual error for debugging
       console.error("Detailed Gemini error:", {
         message: error.message,
         stack: error.stack,
         name: error.name,
+        error: error,
       });
+      
+      // Return a more helpful error message with the actual error
+      return `I apologize, but I'm having trouble processing your request. Error: ${error.message}. Please try again or contact our customer service team directly at support@thegrand.co.uk.`;
     }
     
+    // Unknown error type
+    console.error("Unknown Gemini error type:", error);
     return "I apologize, but I'm having trouble processing your request right now. Please try again later or contact our customer service team directly at support@thegrand.co.uk.";
   }
 }
