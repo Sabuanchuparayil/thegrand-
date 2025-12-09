@@ -230,7 +230,8 @@ Available cultural collections: Traditional Indian Bridal, Contemporary Minimali
     
     // Try to parse JSON from response
     try {
-      const jsonMatch = text.match(/\[.*\]/s);
+      // Use [\s\S] instead of . with 's' flag for ES2017 compatibility
+      const jsonMatch = text.match(/\[[\s\S]*\]/);
       if (jsonMatch) {
         return JSON.parse(jsonMatch[0]);
       }
@@ -267,7 +268,8 @@ Return only a JSON object with "category" (one of: product, service, policy, gen
     const text = response.text();
     
     try {
-      const jsonMatch = text.match(/\{.*\}/s);
+      // Use [\s\S] instead of . with 's' flag for ES2017 compatibility
+      const jsonMatch = text.match(/\{[\s\S]*\}/);
       if (jsonMatch) {
         return JSON.parse(jsonMatch[0]);
       }
