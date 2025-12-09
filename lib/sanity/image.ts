@@ -21,8 +21,13 @@ export function urlForImage(source: SanityImageSource | string | null | undefine
   
   // Check if source is a valid Sanity image object
   if (typeof source === 'object') {
-    // If it's an incomplete image object (missing asset), return empty string
-    if (!source.asset && !source._ref) {
+    // Type guard: Check if it's a reference object (has _ref)
+    const isReference = '_ref' in source && typeof (source as any)._ref === 'string';
+    // Type guard: Check if it has an asset property
+    const hasAsset = 'asset' in source && (source as any).asset;
+    
+    // If it's neither a reference nor has an asset, it's invalid
+    if (!isReference && !hasAsset) {
       return '';
     }
   }
