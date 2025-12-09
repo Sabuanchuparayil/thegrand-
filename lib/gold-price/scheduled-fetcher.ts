@@ -46,15 +46,59 @@ async function fetchAllMetalPrices(currency: string = "GBP"): Promise<{
   }
 
   // Single API call to fetch all metals
-  const response = await fetch(
-    `${baseUrl}/latest?api_key=${apiKey}&currency=${currency}&unit=g`,
-    {
-      next: { revalidate: 0 }, // Don't cache, we want fresh data
-    }
-  );
+  // Try both query parameter and header authentication methods
+  const url = `${baseUrl}/latest?currency=${currency}&unit=g`;
+  
+  // Try with API key in header first (preferred method)
+  let response = await fetch(url, {
+    headers: {
+      'X-API-Key': apiKey,
+      'Content-Type': 'application/json',
+    },
+    next: { revalidate: 0 }, // Don't cache, we want fresh data
+  });
+
+  // If header method fails with 401, try query parameter method
+  if (!response.ok && response.status === 401) {
+    console.log("Header authentication failed, trying query parameter method...");
+    response = await fetch(
+      `${baseUrl}/latest?api_key=${apiKey}&currency=${currency}&unit=g`,
+      {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        next: { revalidate: 0 },
+      }
+    );
+  }
 
   if (!response.ok) {
-    throw new Error(`Metals.Dev API error: ${response.statusText}`);
+    const errorText = await response.text();
+    let errorMessage = `Metals.Dev API error: ${response.statusText}`;
+    
+    // Provide more specific error messages
+    if (response.status === 401) {
+      errorMessage = `Metals.Dev API error: Unauthorized. Please verify that METALS_API_KEY is correctly set in Railway environment variables and is a valid API key from https://metals.dev/. The API key should be visible in your Metals.Dev dashboard.`;
+    } else if (response.status === 403) {
+      errorMessage = `Metals.Dev API error: Forbidden. Your API key may not have permission to access this endpoint, or your subscription may have expired.`;
+    } else if (response.status === 429) {
+      errorMessage = `Metals.Dev API error: Rate limit exceeded. You may have exceeded your monthly API quota. Check your usage at https://metals.dev/`;
+    }
+    
+    // Try to parse error response for more details
+    try {
+      const errorData = JSON.parse(errorText);
+      if (errorData.message || errorData.error) {
+        errorMessage += ` Details: ${errorData.message || errorData.error}`;
+      }
+    } catch {
+      // If JSON parsing fails, include raw response
+      if (errorText) {
+        errorMessage += ` Response: ${errorText.substring(0, 200)}`;
+      }
+    }
+    
+    throw new Error(errorMessage);
   }
 
   const data = await response.json();

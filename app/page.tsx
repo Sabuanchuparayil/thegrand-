@@ -46,7 +46,7 @@ export default async function HomePage() {
         />
         <BrandValuesSection />
         <CategoryCarousel />
-        <CulturalBanner />
+        <CulturalBanner sections={homepage?.cultural_sections} />
         {collections.length > 0 && (
           <CollectionSection collections={collections.slice(0, 3)} />
         )}

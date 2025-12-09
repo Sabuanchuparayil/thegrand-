@@ -114,7 +114,20 @@ export const homepageQuery = `*[_type == "homepage"][0] {
     description
   },
   ar_tryon_highlight,
-  inauguration_event
+  inauguration_event,
+  cultural_sections[]{
+    title,
+    description,
+    icon,
+    image,
+    season,
+    link->{
+      _type,
+      _id,
+      title,
+      "slug": slug.current
+    }
+  }
 }`;
 
 export const featuredProductsQuery = `*[_type == "product" && featured == true] | order(_createdAt desc) [0...12] {

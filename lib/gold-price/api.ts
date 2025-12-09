@@ -76,16 +76,48 @@ export async function fetchGoldPrice(
     }
 
     // Fetch from Metals.Dev API
-    // Metals.Dev uses /latest endpoint with api_key as query parameter
-    const response = await fetch(
-      `${baseUrl}/latest?api_key=${apiKey}&currency=${currency}&unit=g`,
-      {
-        next: { revalidate: 3600 }, // Revalidate every hour (for daily updates)
-      }
-    );
+    // Try header authentication first (preferred), then query parameter
+    const url = `${baseUrl}/latest?currency=${currency}&unit=g`;
+    
+    let response = await fetch(url, {
+      headers: {
+        'X-API-Key': apiKey,
+        'Content-Type': 'application/json',
+      },
+      next: { revalidate: 3600 },
+    });
+
+    // If header method fails with 401, try query parameter method
+    if (!response.ok && response.status === 401) {
+      response = await fetch(
+        `${baseUrl}/latest?api_key=${apiKey}&currency=${currency}&unit=g`,
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          next: { revalidate: 3600 },
+        }
+      );
+    }
 
     if (!response.ok) {
-      throw new Error(`Metals.Dev API error: ${response.statusText}`);
+      const errorText = await response.text();
+      let errorMessage = `Metals.Dev API error: ${response.statusText}`;
+      
+      if (response.status === 401) {
+        errorMessage = `Metals.Dev API error: Unauthorized. Please verify METALS_API_KEY is set correctly in Railway.`;
+      }
+      
+      try {
+        const errorData = JSON.parse(errorText);
+        if (errorData.message || errorData.error) {
+          errorMessage += ` ${errorData.message || errorData.error}`;
+        }
+      } catch {
+        // Ignore JSON parse errors
+      }
+      
+      throw new Error(errorMessage);
     }
 
     const data = await response.json();
@@ -195,16 +227,48 @@ export async function fetchPlatinumPrice(
     }
 
     // Fetch from Metals.Dev API
-    // Metals.Dev uses /latest endpoint with api_key as query parameter
-    const response = await fetch(
-      `${baseUrl}/latest?api_key=${apiKey}&currency=${currency}&unit=g`,
-      {
-        next: { revalidate: 3600 }, // Revalidate every hour
-      }
-    );
+    // Try header authentication first (preferred), then query parameter
+    const url = `${baseUrl}/latest?currency=${currency}&unit=g`;
+    
+    let response = await fetch(url, {
+      headers: {
+        'X-API-Key': apiKey,
+        'Content-Type': 'application/json',
+      },
+      next: { revalidate: 3600 },
+    });
+
+    // If header method fails with 401, try query parameter method
+    if (!response.ok && response.status === 401) {
+      response = await fetch(
+        `${baseUrl}/latest?api_key=${apiKey}&currency=${currency}&unit=g`,
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          next: { revalidate: 3600 },
+        }
+      );
+    }
 
     if (!response.ok) {
-      throw new Error(`Metals.Dev API error: ${response.statusText}`);
+      const errorText = await response.text();
+      let errorMessage = `Metals.Dev API error: ${response.statusText}`;
+      
+      if (response.status === 401) {
+        errorMessage = `Metals.Dev API error: Unauthorized. Please verify METALS_API_KEY is set correctly in Railway.`;
+      }
+      
+      try {
+        const errorData = JSON.parse(errorText);
+        if (errorData.message || errorData.error) {
+          errorMessage += ` ${errorData.message || errorData.error}`;
+        }
+      } catch {
+        // Ignore JSON parse errors
+      }
+      
+      throw new Error(errorMessage);
     }
 
     const data = await response.json();

@@ -152,6 +152,37 @@ Guidelines:
 }
 
 /**
+ * Fetch products from Sanity for context
+ */
+async function getProductsContext(): Promise<string> {
+  try {
+    // Dynamically import to avoid client-side issues
+    const { fetchProducts } = await import("@/lib/sanity/data-fetcher");
+    const products = await fetchProducts();
+    
+    if (!products || products.length === 0) {
+      return "No products are currently available in the catalog.";
+    }
+    
+    // Get product names and categories
+    const productList = products.slice(0, 20).map((p: any) => ({
+      name: p.name,
+      category: p.category,
+      price: p.price,
+      cultural_tags: p.cultural_tags || [],
+    }));
+    
+    return `Current Products Available:
+${productList.map((p: any) => `- ${p.name} (${p.category}) - ${p.cultural_tags?.join(", ") || "General"}`).join("\n")}
+
+Total products: ${products.length}`;
+  } catch (error) {
+    console.error("Error fetching products for context:", error);
+    return "Product information is currently unavailable.";
+  }
+}
+
+/**
  * Generate a response to a customer query
  */
 export async function generateResponse(
@@ -165,15 +196,20 @@ export async function generateResponse(
     
     const model = getModel();
     
+    // Fetch current products for context
+    const productsContext = await getProductsContext();
+    
     // Build conversation context
     const historyText = conversationHistory
       .slice(-5) // Last 5 messages for context
       .map(msg => `${msg.role === "user" ? "Customer" : "Assistant"}: ${msg.content}`)
       .join("\n");
     
-    const prompt = historyText
-      ? `${historyText}\n\nCustomer: ${userMessage}\nAssistant:`
-      : `Customer: ${userMessage}\nAssistant:`;
+    const prompt = `${productsContext}
+
+${historyText ? `${historyText}\n\n` : ""}Customer: ${userMessage}
+
+Assistant: Please provide a helpful response about The Grand's products and services. Use the product list above to give specific information when relevant.`;
 
     const result = await model.generateContent(prompt);
     const response = await result.response;
@@ -198,6 +234,12 @@ export async function generateResponse(
       if (error.message.includes("safety")) {
         return "I apologize, but I couldn't process that request due to content safety filters. Please rephrase your question or contact our customer service team.";
       }
+      // Log the actual error for debugging
+      console.error("Detailed Gemini error:", {
+        message: error.message,
+        stack: error.stack,
+        name: error.name,
+      });
     }
     
     return "I apologize, but I'm having trouble processing your request right now. Please try again later or contact our customer service team directly at support@thegrand.co.uk.";
