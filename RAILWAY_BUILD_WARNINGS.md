@@ -9,6 +9,7 @@ The warnings you see during Railway deployment are **informational security warn
 ```
 SecretsUsedInArgOrEnv: Do not use ARG or ENV instructions for sensitive data
 UndefinedVar: Usage of undefined variable '$NIXPACKS_PATH'
+npm warn config production Use `--omit=dev` instead.
 ```
 
 ## 🔍 Why These Warnings Appear
@@ -54,6 +55,39 @@ UndefinedVar: Usage of undefined variable '$NIXPACKS_PATH'
 - ✅ This is an internal Nixpacks variable
 - ✅ It's defined by Railway's build system
 - ✅ It doesn't affect your application
+
+### 3. **npm Production Config Warning**
+
+**Source**: npm deprecation notice
+
+**What You're Seeing**:
+```
+npm warn config production Use `--omit=dev` instead.
+```
+
+**What's Happening**:
+- npm has deprecated the `--production` flag
+- The new recommended flag is `--omit=dev`
+- This warning appears when npm detects production environment (NODE_ENV=production)
+- Railway sets NODE_ENV=production during builds, triggering this deprecation warning
+
+**Why It's Safe**:
+- ✅ This is a **deprecation warning**, not an error
+- ✅ Your build still works correctly
+- ✅ `npm ci` and `npm run build` complete successfully
+- ✅ This is just npm informing you about future changes
+- ✅ Railway/Nixpacks will update their build system in the future
+
+**Current Behavior**:
+- Railway uses `npm ci` which respects NODE_ENV
+- When NODE_ENV=production, npm shows this deprecation warning
+- The build still installs dependencies correctly
+- No functional impact on your deployment
+
+**Future**:
+- Railway/Nixpacks will eventually update to use `--omit=dev`
+- This warning will disappear once they update
+- No action needed from you
 
 ## ✅ What This Means for You
 
