@@ -4,7 +4,6 @@ import { motion } from "framer-motion";
 import Link from "next/link";
 import Image from "next/image";
 import { Sparkles } from "lucide-react";
-import { urlForImage } from "@/lib/sanity/image";
 import DynamicPrice from "./DynamicPrice";
 import { Product } from "@/lib/gold-price/calculator";
 
@@ -25,8 +24,8 @@ interface ProductCardProps {
 
 export default function ProductCard({ product, index = 0 }: ProductCardProps) {
   const hasAR = product.ar_2d_overlay || product.ar_3d_model;
-  const imageUrl = product.images?.[0];
-  const imageSrc = typeof imageUrl === 'string' ? imageUrl : (imageUrl ? urlForImage(imageUrl) : null);
+  // Images are now pre-processed to URLs in the data fetcher
+  const imageSrc = product.images?.[0] || null;
 
   return (
     <motion.div

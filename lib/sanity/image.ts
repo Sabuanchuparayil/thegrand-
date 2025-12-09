@@ -19,16 +19,29 @@ export function urlForImage(source: SanityImageSource | string | null | undefine
     return '';
   }
   
-  // Otherwise, treat it as a Sanity image source
-  let imageBuilder = builder.image(source);
-  
-  if (width) {
-    imageBuilder = imageBuilder.width(width);
-  }
-  if (height) {
-    imageBuilder = imageBuilder.height(height);
+  // Check if source is a valid Sanity image object
+  if (typeof source === 'object') {
+    // If it's an incomplete image object (missing asset), return empty string
+    if (!source.asset && !source._ref) {
+      return '';
+    }
   }
   
-  return imageBuilder.url();
+  try {
+    // Otherwise, treat it as a Sanity image source
+    let imageBuilder = builder.image(source);
+    
+    if (width) {
+      imageBuilder = imageBuilder.width(width);
+    }
+    if (height) {
+      imageBuilder = imageBuilder.height(height);
+    }
+    
+    return imageBuilder.url();
+  } catch (error) {
+    console.error('Error generating image URL:', error);
+    return '';
+  }
 }
 

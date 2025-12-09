@@ -1,5 +1,6 @@
 // Data fetcher with fallback to mock data
 import { client } from "./client";
+import { urlForImage } from "./image";
 import {
   productQuery,
   productBySlugQuery,
@@ -60,6 +61,95 @@ function sanitizeReferences(obj: any): any {
   return obj;
 }
 
+/**
+ * Convert Sanity image objects to URLs
+ * Handles both single images and arrays of images
+ */
+function processImages(images: any): any {
+  if (!images) {
+    return images;
+  }
+  
+  if (Array.isArray(images)) {
+    return images.map((img: any) => {
+      if (typeof img === 'string') {
+        return img;
+      }
+      if (img && typeof img === 'object') {
+        // Check if it's a valid Sanity image object
+        if (img._type === 'image' || img.asset || img._ref) {
+          try {
+            const url = urlForImage(img);
+            return url || null;
+          } catch (error) {
+            console.error('Error processing image:', error);
+            return null;
+          }
+        }
+        // If it's not a valid image object, return null
+        return null;
+      }
+      return null;
+    }).filter((img: any) => img !== null && img !== '');
+  }
+  
+  if (typeof images === 'object') {
+    // Check if it's a valid Sanity image object
+    if (images._type === 'image' || images.asset || images._ref) {
+      try {
+        const url = urlForImage(images);
+        return url || null;
+      } catch (error) {
+        console.error('Error processing image:', error);
+        return null;
+      }
+    }
+    // If it's not a valid image object, return null
+    return null;
+  }
+  
+  return images;
+}
+
+/**
+ * Process product images to convert Sanity image objects to URLs
+ */
+function processProductImages(product: any): any {
+  if (!product) {
+    return product;
+  }
+  
+  const processed = { ...product };
+  
+  // Process main images
+  if (processed.images) {
+    processed.images = processImages(processed.images);
+  }
+  
+  // Process AR overlay image
+  if (processed.ar_2d_overlay) {
+    try {
+      processed.ar_2d_overlay = processImages(processed.ar_2d_overlay);
+    } catch (error) {
+      console.error('Error processing AR overlay:', error);
+      processed.ar_2d_overlay = null;
+    }
+  }
+  
+  return processed;
+}
+
+/**
+ * Process multiple products' images
+ */
+function processProductsImages(products: any[]): any[] {
+  if (!products || !Array.isArray(products)) {
+    return products || [];
+  }
+  
+  return products.map(product => processProductImages(product));
+}
+
 export async function fetchProducts() {
   let products;
   
@@ -71,6 +161,8 @@ export async function fetchProducts() {
       products = products || [];
       // Sanitize any unresolved references
       products = sanitizeReferences(products);
+      // Process images to URLs
+      products = processProductsImages(products);
     } catch (error) {
       console.error("Error fetching products, using mock data:", error);
       products = mockProducts;
@@ -93,6 +185,8 @@ export async function fetchProductBySlug(slug: string) {
       // Sanitize any unresolved references
       if (product) {
         product = sanitizeReferences(product);
+        // Process images to URLs
+        product = processProductImages(product);
       }
     } catch (error) {
       console.error("Error fetching product, using mock data:", error);
@@ -119,6 +213,8 @@ export async function fetchProductsByCategory(category: string) {
       products = products || [];
       // Sanitize any unresolved references
       products = sanitizeReferences(products);
+      // Process images to URLs
+      products = processProductsImages(products);
     } catch (error) {
       console.error("Error fetching products by category, using mock data:", error);
       products = getMockProductsByCategory(category);
@@ -136,7 +232,18 @@ export async function fetchCollections() {
 
   try {
     const collections = await client.fetch(collectionQuery);
-    const sanitized = sanitizeReferences(collections || []);
+    let sanitized = sanitizeReferences(collections || []);
+    // Process hero images
+    sanitized = sanitized.map((collection: any) => {
+      if (collection.hero_image) {
+        try {
+          collection.hero_image = processImages(collection.hero_image);
+        } catch (error) {
+          console.error('Error processing collection hero image:', error);
+        }
+      }
+      return collection;
+    });
     return sanitized;
   } catch (error) {
     console.error("Error fetching collections, using mock data:", error);
@@ -156,6 +263,18 @@ export async function fetchCollectionBySlug(slug: string) {
       // Sanitize any unresolved references
       if (collection) {
         collection = sanitizeReferences(collection);
+        // Process hero image
+        if (collection.hero_image) {
+          try {
+            collection.hero_image = processImages(collection.hero_image);
+          } catch (error) {
+            console.error('Error processing collection hero image:', error);
+          }
+        }
+        // Process product images
+        if (collection.products && Array.isArray(collection.products)) {
+          collection.products = processProductsImages(collection.products);
+        }
       }
     } catch (error) {
       console.error("Error fetching collection, using mock data:", error);
@@ -203,6 +322,8 @@ export async function fetchFeaturedProducts() {
       products = products || [];
       // Sanitize any unresolved references
       products = sanitizeReferences(products);
+      // Process images to URLs
+      products = processProductsImages(products);
     } catch (error) {
       console.error("Error fetching featured products, using mock data:", error);
       products = getMockFeaturedProducts();
