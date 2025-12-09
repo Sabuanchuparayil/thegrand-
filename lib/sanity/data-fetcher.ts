@@ -28,6 +28,38 @@ import {
 
 const USE_MOCK_DATA = process.env.NEXT_PUBLIC_USE_MOCK_DATA === "true" || !process.env.NEXT_PUBLIC_SANITY_PROJECT_ID;
 
+/**
+ * Recursively remove unresolved Sanity reference objects from data
+ * Reference objects have {_ref, _type} but no actual data
+ */
+function sanitizeReferences(obj: any): any {
+  if (obj === null || obj === undefined) {
+    return obj;
+  }
+  
+  // If it's a reference object (has _ref and _type but no other meaningful data)
+  if (typeof obj === 'object' && obj._ref && obj._type && Object.keys(obj).length === 2) {
+    return null;
+  }
+  
+  if (Array.isArray(obj)) {
+    return obj.map(item => sanitizeReferences(item)).filter(item => item !== null);
+  }
+  
+  if (typeof obj === 'object') {
+    const sanitized: any = {};
+    for (const [key, value] of Object.entries(obj)) {
+      const sanitizedValue = sanitizeReferences(value);
+      if (sanitizedValue !== null) {
+        sanitized[key] = sanitizedValue;
+      }
+    }
+    return sanitized;
+  }
+  
+  return obj;
+}
+
 export async function fetchProducts() {
   let products;
   
@@ -37,6 +69,8 @@ export async function fetchProducts() {
     try {
       products = await client.fetch(productQuery);
       products = products || [];
+      // Sanitize any unresolved references
+      products = sanitizeReferences(products);
     } catch (error) {
       console.error("Error fetching products, using mock data:", error);
       products = mockProducts;
@@ -56,6 +90,10 @@ export async function fetchProductBySlug(slug: string) {
     try {
       product = await client.fetch(productBySlugQuery, { slug });
       product = product || null;
+      // Sanitize any unresolved references
+      if (product) {
+        product = sanitizeReferences(product);
+      }
     } catch (error) {
       console.error("Error fetching product, using mock data:", error);
       product = getMockProductBySlug(slug);
@@ -79,6 +117,8 @@ export async function fetchProductsByCategory(category: string) {
     try {
       products = await client.fetch(productsByCategoryQuery, { category });
       products = products || [];
+      // Sanitize any unresolved references
+      products = sanitizeReferences(products);
     } catch (error) {
       console.error("Error fetching products by category, using mock data:", error);
       products = getMockProductsByCategory(category);
@@ -96,7 +136,8 @@ export async function fetchCollections() {
 
   try {
     const collections = await client.fetch(collectionQuery);
-    return collections || [];
+    const sanitized = sanitizeReferences(collections || []);
+    return sanitized;
   } catch (error) {
     console.error("Error fetching collections, using mock data:", error);
     return mockCollections;
@@ -112,6 +153,10 @@ export async function fetchCollectionBySlug(slug: string) {
     try {
       collection = await client.fetch(collectionBySlugQuery, { slug });
       collection = collection || null;
+      // Sanitize any unresolved references
+      if (collection) {
+        collection = sanitizeReferences(collection);
+      }
     } catch (error) {
       console.error("Error fetching collection, using mock data:", error);
       collection = getMockCollectionBySlug(slug);
@@ -139,7 +184,8 @@ export async function fetchHomepage() {
 
   try {
     const homepage = await client.fetch(homepageQuery);
-    return homepage || mockHomepage;
+    const sanitized = homepage ? sanitizeReferences(homepage) : mockHomepage;
+    return sanitized || mockHomepage;
   } catch (error) {
     console.error("Error fetching homepage, using mock data:", error);
     return mockHomepage;
@@ -155,6 +201,8 @@ export async function fetchFeaturedProducts() {
     try {
       products = await client.fetch(featuredProductsQuery);
       products = products || [];
+      // Sanitize any unresolved references
+      products = sanitizeReferences(products);
     } catch (error) {
       console.error("Error fetching featured products, using mock data:", error);
       products = getMockFeaturedProducts();

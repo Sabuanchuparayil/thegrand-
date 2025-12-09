@@ -8,8 +8,8 @@ import { Sparkles } from "lucide-react";
 interface Collection {
   _id: string;
   title: string;
-  slug: {
-    current: string;
+  slug: string | {
+    current?: string;
   };
 }
 
@@ -86,7 +86,7 @@ export default function CategoryCarousel() {
                 className="flex-shrink-0 snap-start"
               >
                 <Link
-                  href={`/collections/${collection.slug?.current || collection.slug}`}
+                  href={`/collections/${typeof collection.slug === 'string' ? collection.slug : (collection.slug?.current || '')}`}
                   className="block touch-manipulation"
                 >
                   <div className="w-56 sm:w-64 h-40 sm:h-48 glass-morphism rounded-2xl p-4 sm:p-6 flex flex-col items-center justify-center text-center hover-glow transition-all duration-300 group">

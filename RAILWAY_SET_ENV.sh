@@ -12,9 +12,9 @@ if ! railway variables &>/dev/null; then
 fi
 
 # Required Sanity CMS variables (Railway CLI v4.12.0 syntax)
-railway variables --set "NEXT_PUBLIC_SANITY_PROJECT_ID=se74u26p"
+railway variables --set "NEXT_PUBLIC_SANITY_PROJECT_ID=m215e86r"
 railway variables --set "NEXT_PUBLIC_SANITY_DATASET=production"
-railway variables --set "SANITY_API_TOKEN=skcVtCTd4nTlk1bFaB0Lnw1BYg3O6iUJMFp8T0RSv6i46tT8fH3lmDlQxU2nSiSjN5EKX3q52CTgsV5piEc4H3FvxlmoXfxdWcjpRNWSUJuUXyQdZ7ypVQY58TA4n5lR6RnJK2VMe9ljFNlcOacXNPt4wQ7wVhZwlAdy0g8CpTyBz2pCAlp3"
+railway variables --set "SANITY_API_TOKEN=skCELrzNRFX79kvT6ut5BtRweDNCZgDJGl8n5dOC7GijFgPKz9yMZfed8Di0oFW8spqS6YMyhWxHyKR5KnpVIjDZPtq3ol17x9CM7UnuFFvylORhObdt3uL4nuLqhycNvf4rjbI71YeuqaMJlAlGQAvvDLsaB0Yef4YKRMhuyPDIYtp0b5CO"
 
 # Generate and set NEXTAUTH_SECRET
 NEXTAUTH_SECRET=$(openssl rand -base64 32)

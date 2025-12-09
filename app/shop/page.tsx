@@ -7,7 +7,7 @@ import { fetchProducts } from "@/lib/sanity/data-fetcher";
 export const revalidate = 60;
 
 export default async function ShopPage() {
-  const products = await fetchProducts();
+  const products = await fetchProducts() || [];
 
   return (
     <main className="min-h-screen">

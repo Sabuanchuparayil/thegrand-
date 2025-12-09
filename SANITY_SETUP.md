@@ -1,12 +1,12 @@
 # Sanity CMS Setup Instructions
 
-Your Sanity credentials have been configured. Please create a `.env.local` file in the root directory with the following content:
+Your Sanity credentials have been configured. The `.env.local` file has been set up with the correct project details.
 
 ```env
 # Sanity CMS Configuration
-NEXT_PUBLIC_SANITY_PROJECT_ID=se74u26p
+NEXT_PUBLIC_SANITY_PROJECT_ID=m215e86r
 NEXT_PUBLIC_SANITY_DATASET=production
-SANITY_API_TOKEN=skcVtCTd4nTlk1bFaB0Lnw1BYg3O6iUJMFp8T0RSv6i46tT8fH3lmDlQxU2nSiSjN5EKX3q52CTgsV5piEc4H3FvxlmoXfxdWcjpRNWSUJuUXyQdZ7ypVQY58TA4n5lR6RnJK2VMe9ljFNlcOacXNPt4wQ7wVhZwlAdy0g8CpTyBz2pCAlp3
+SANITY_API_TOKEN=<your-token-here>
 
 # Next.js Configuration
 NEXT_PUBLIC_SITE_URL=http://localhost:3000
@@ -14,13 +14,13 @@ NEXT_PUBLIC_SITE_URL=http://localhost:3000
 
 ## Next Steps
 
-1. **Create the `.env.local` file** with the credentials above
+1. **The `.env.local` file** has been configured with the correct project details
 2. **Set up Sanity Studio** to manage your content:
    ```bash
    npm install -g @sanity/cli
    sanity init
    ```
-   - Use your existing project ID: `se74u26p`
+   - Use your existing project ID: `m215e86r`
    - Choose the dataset: `production`
    
 3. **Import the schemas** from `/sanity/schemas/` into your Sanity Studio:
@@ -41,8 +41,8 @@ NEXT_PUBLIC_SITE_URL=http://localhost:3000
 
 ## Sanity Project Details
 
-- **Project ID**: se74u26p
-- **Organization ID**: oSxp0QOuG
+- **Project ID**: m215e86r
+- **Organization ID**: oSxp0Q0uG
 - **Dataset**: production (default)
 
 ## Important Notes

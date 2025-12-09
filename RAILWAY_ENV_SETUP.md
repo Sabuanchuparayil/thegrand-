@@ -18,9 +18,9 @@ The build is failing because **Sanity environment variables are not set in Railw
 4. **Add these REQUIRED variables:**
 
 ```env
-NEXT_PUBLIC_SANITY_PROJECT_ID=se74u26p
+NEXT_PUBLIC_SANITY_PROJECT_ID=m215e86r
 NEXT_PUBLIC_SANITY_DATASET=production
-SANITY_API_TOKEN=skcVtCTd4nTlk1bFaB0Lnw1BYg3O6iUJMFp8T0RSv6i46tT8fH3lmDlQxU2nSiSjN5EKX3q52CTgsV5piEc4H3FvxlmoXfxdWcjpRNWSUJuUXyQdZ7ypVQY58TA4n5lR6RnJK2VMe9ljFNlcOacXNPt4wQ7wVhZwlAdy0g8CpTyBz2pCAlp3
+SANITY_API_TOKEN=skCELrzNRFX79kvT6ut5BtRweDNCZgDJGl8n5dOC7GijFgPKz9yMZfed8Di0oFW8spqS6YMyhWxHyKR5KnpVIjDZPtq3ol17x9CM7UnuFFvylORhObdt3uL4nuLqhycNvf4rjbI71YeuqaMJlAlGQAvvDLsaB0Yef4YKRMhuyPDIYtp0b5CO
 NEXT_PUBLIC_SITE_URL=https://your-app-name.up.railway.app
 ```
 
@@ -39,9 +39,9 @@ railway login
 railway link
 
 # Set required variables
-railway variables set NEXT_PUBLIC_SANITY_PROJECT_ID=se74u26p
+railway variables set NEXT_PUBLIC_SANITY_PROJECT_ID=m215e86r
 railway variables set NEXT_PUBLIC_SANITY_DATASET=production
-railway variables set SANITY_API_TOKEN=skcVtCTd4nTlk1bFaB0Lnw1BYg3O6iUJMFp8T0RSv6i46tT8fH3lmDlQxU2nSiSjN5EKX3q52CTgsV5piEc4H3FvxlmoXfxdWcjpRNWSUJuUXyQdZ7ypVQY58TA4n5lR6RnJK2VMe9ljFNlcOacXNPt4wQ7wVhZwlAdy0g8CpTyBz2pCAlp3
+railway variables set SANITY_API_TOKEN=skCELrzNRFX79kvT6ut5BtRweDNCZgDJGl8n5dOC7GijFgPKz9yMZfed8Di0oFW8spqS6YMyhWxHyKR5KnpVIjDZPtq3ol17x9CM7UnuFFvylORhObdt3uL4nuLqhycNvf4rjbI71YeuqaMJlAlGQAvvDLsaB0Yef4YKRMhuyPDIYtp0b5CO
 
 # Get your Railway URL first, then set:
 railway variables set NEXT_PUBLIC_SITE_URL=https://your-app-name.up.railway.app
@@ -54,9 +54,9 @@ railway variables set NEXT_PUBLIC_SITE_URL=https://your-app-name.up.railway.app
 ### **Required (Must Set Before Build):**
 
 ```env
-NEXT_PUBLIC_SANITY_PROJECT_ID=se74u26p
+NEXT_PUBLIC_SANITY_PROJECT_ID=m215e86r
 NEXT_PUBLIC_SANITY_DATASET=production
-SANITY_API_TOKEN=skcVtCTd4nTlk1bFaB0Lnw1BYg3O6iUJMFp8T0RSv6i46tT8fH3lmDlQxU2nSiSjN5EKX3q52CTgsV5piEc4H3FvxlmoXfxdWcjpRNWSUJuUXyQdZ7ypVQY58TA4n5lR6RnJK2VMe9ljFNlcOacXNPt4wQ7wVhZwlAdy0g8CpTyBz2pCAlp3
+SANITY_API_TOKEN=skCELrzNRFX79kvT6ut5BtRweDNCZgDJGl8n5dOC7GijFgPKz9yMZfed8Di0oFW8spqS6YMyhWxHyKR5KnpVIjDZPtq3ol17x9CM7UnuFFvylORhObdt3uL4nuLqhycNvf4rjbI71YeuqaMJlAlGQAvvDLsaB0Yef4YKRMhuyPDIYtp0b5CO
 NEXT_PUBLIC_SITE_URL=https://your-app-name.up.railway.app
 ```
 
@@ -104,9 +104,9 @@ CRON_SECRET=random_secret
 
 | Variable Name | Value |
 |--------------|-------|
-| `NEXT_PUBLIC_SANITY_PROJECT_ID` | `se74u26p` |
+| `NEXT_PUBLIC_SANITY_PROJECT_ID` | `m215e86r` |
 | `NEXT_PUBLIC_SANITY_DATASET` | `production` |
-| `SANITY_API_TOKEN` | `skcVtCTd4nTlk1bFaB0Lnw1BYg3O6iUJMFp8T0RSv6i46tT8fH3lmDlQxU2nSiSjN5EKX3q52CTgsV5piEc4H3FvxlmoXfxdWcjpRNWSUJuUXyQdZ7ypVQY58TA4n5lR6RnJK2VMe9ljFNlcOacXNPt4wQ7wVhZwlAdy0g8CpTyBz2pCAlp3` |
+| `SANITY_API_TOKEN` | `skCELrzNRFX79kvT6ut5BtRweDNCZgDJGl8n5dOC7GijFgPKz9yMZfed8Di0oFW8spqS6YMyhWxHyKR5KnpVIjDZPtq3ol17x9CM7UnuFFvylORhObdt3uL4nuLqhycNvf4rjbI71YeuqaMJlAlGQAvvDLsaB0Yef4YKRMhuyPDIYtp0b5CO` |
 | `NEXT_PUBLIC_SITE_URL` | `https://your-app-name.up.railway.app` |
 
 ### **Step 3: Trigger Redeploy**
@@ -138,7 +138,7 @@ After setting variables and redeploying:
    - Check for typos in variable names
 
 2. **Check variable values:**
-   - `NEXT_PUBLIC_SANITY_PROJECT_ID` should be `se74u26p`
+   - `NEXT_PUBLIC_SANITY_PROJECT_ID` should be `m215e86r`
    - No extra spaces or quotes
 
 3. **Redeploy:**
@@ -162,9 +162,9 @@ After setting variables and redeploying:
 ## 📝 Quick Reference
 
 **Your Sanity Credentials:**
-- Project ID: `se74u26p`
+- Project ID: `m215e86r`
 - Dataset: `production`
-- API Token: `skcVtCTd4nTlk1bFaB0Lnw1BYg3O6iUJMFp8T0RSv6i46tT8fH3lmDlQxU2nSiSjN5EKX3q52CTgsV5piEc4H3FvxlmoXfxdWcjpRNWSUJuUXyQdZ7ypVQY58TA4n5lR6RnJK2VMe9ljFNlcOacXNPt4wQ7wVhZwlAdy0g8CpTyBz2pCAlp3`
+- API Token: `skCELrzNRFX79kvT6ut5BtRweDNCZgDJGl8n5dOC7GijFgPKz9yMZfed8Di0oFW8spqS6YMyhWxHyKR5KnpVIjDZPtq3ol17x9CM7UnuFFvylORhObdt3uL4nuLqhycNvf4rjbI71YeuqaMJlAlGQAvvDLsaB0Yef4YKRMhuyPDIYtp0b5CO`
 
 **Railway Dashboard**: https://railway.app/dashboard
 
