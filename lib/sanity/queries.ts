@@ -121,11 +121,15 @@ export const homepageQuery = `*[_type == "homepage"][0] {
     icon,
     image,
     season,
-    link->{
-      _type,
-      _id,
-      title,
-      "slug": slug.current
+    link{
+      type,
+      collection->{
+        _id,
+        title,
+        "slug": slug.current
+      },
+      category,
+      url
     }
   }
 }`;

@@ -13,10 +13,14 @@ interface CulturalSection {
   image?: any;
   season?: string;
   link?: {
-    _type: string;
-    _id?: string;
-    title?: string;
-    slug?: string;
+    type?: "collection" | "category" | "url";
+    collection?: {
+      _id: string;
+      title: string;
+      slug: string;
+    };
+    category?: string;
+    url?: string;
   };
 }
 
@@ -25,7 +29,7 @@ interface CulturalBannerProps {
 }
 
 // Fallback data if no Sanity data is available
-const fallbackCulturalHighlights = [
+const fallbackCulturalHighlights: CulturalSection[] = [
   {
     title: "Diwali Collection",
     description: "Celebrate the Festival of Lights with our exquisite gold jewelry",
@@ -105,7 +109,7 @@ export default function CulturalBanner({ sections = [] }: CulturalBannerProps) {
           {imageUrl ? (
             <Image
               src={imageUrl}
-              alt={currentHighlight.image?.alt || currentHighlight.title}
+              alt={currentHighlight?.image?.alt || currentHighlight?.title || ""}
               fill
               className="object-cover"
               priority={currentIndex === 0}
@@ -127,18 +131,31 @@ export default function CulturalBanner({ sections = [] }: CulturalBannerProps) {
               <p className="text-xl text-diamond/90 max-w-2xl">
                 {currentHighlight.description}
               </p>
-              {currentHighlight.link && (
-                <Link
-                  href={
-                    currentHighlight.link._type === "collection" && currentHighlight.link.slug
-                      ? `/collections/${currentHighlight.link.slug}`
-                      : "#"
-                  }
-                  className="mt-6 inline-block px-6 py-3 bg-gold text-charcoal font-semibold rounded-lg hover:bg-gold/90 transition-colors"
-                >
-                  Explore Collection
-                </Link>
-              )}
+              {currentHighlight.link && (() => {
+                const link = currentHighlight.link;
+                let href = "#";
+                let linkText = "Explore Collection";
+                
+                if (link.type === "collection" && link.collection?.slug) {
+                  href = `/collections/${link.collection.slug}`;
+                  linkText = `Explore ${link.collection.title || "Collection"}`;
+                } else if (link.type === "category" && link.category) {
+                  href = `/shop/${link.category}`;
+                  linkText = `Shop ${link.category.charAt(0).toUpperCase() + link.category.slice(1)}`;
+                } else if (link.type === "url" && link.url) {
+                  href = link.url;
+                  linkText = "Learn More";
+                }
+                
+                return (
+                  <Link
+                    href={href}
+                    className="mt-6 inline-block px-6 py-3 bg-gold text-charcoal font-semibold rounded-lg hover:bg-gold/90 transition-colors"
+                  >
+                    {linkText}
+                  </Link>
+                );
+              })()}
             </div>
           </div>
         </motion.div>
