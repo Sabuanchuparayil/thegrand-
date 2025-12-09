@@ -6,6 +6,7 @@ import { fetchCollectionBySlug } from "@/lib/sanity/data-fetcher";
 import { notFound } from "next/navigation";
 import { urlForImage } from "@/lib/sanity/image";
 
+export const dynamic = 'force-dynamic';
 export const revalidate = 60;
 
 export default async function CollectionDetailPage({
