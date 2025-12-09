@@ -1,13 +1,6 @@
 import Link from "next/link";
 import { Sparkles, Mail, Phone, MapPin } from "lucide-react";
-
-const culturalCategories = [
-  { name: "Traditional Indian Bridal", href: "/collections/traditional-indian" },
-  { name: "Middle Eastern Ornate", href: "/collections/middle-eastern" },
-  { name: "Contemporary Minimalist", href: "/collections/contemporary" },
-  { name: "Western Engagement", href: "/collections/western-engagement" },
-  { name: "Afro-Caribbean", href: "/collections/afro-caribbean" },
-];
+import { fetchCollections } from "@/lib/sanity/data-fetcher";
 
 const shopCategories = [
   { name: "Necklaces", href: "/shop/necklaces" },
@@ -18,7 +11,15 @@ const shopCategories = [
   { name: "Pendants", href: "/shop/pendants" },
 ];
 
-export default function Footer() {
+export default async function Footer() {
+  // Fetch collections dynamically
+  const collections = await fetchCollections().catch(() => []);
+  
+  // Limit to first 5 collections for footer
+  const culturalCategories = collections.slice(0, 5).map((collection: any) => ({
+    name: collection.title,
+    href: `/collections/${collection.slug?.current || collection.slug}`,
+  }));
   return (
     <footer className="bg-charcoal text-diamond mt-20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
