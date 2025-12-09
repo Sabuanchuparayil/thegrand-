@@ -32,33 +32,63 @@ const USE_MOCK_DATA = process.env.NEXT_PUBLIC_USE_MOCK_DATA === "true" || !proce
 /**
  * Recursively remove unresolved Sanity reference objects from data
  * Reference objects have {_ref, _type} but no actual data
+ * 
+ * Bug Fix 1: Preserves legitimate null values while removing unresolved references
+ * Bug Fix 2: Returns a special marker for objects that became empty after sanitization
  */
-function sanitizeReferences(obj: any): any {
+const EMPTY_OBJECT_MARKER = { __isEmpty: true };
+
+function sanitizeReferences(obj: any, isRoot: boolean = false): any {
   if (obj === null || obj === undefined) {
     return obj;
   }
   
   // If it's a reference object (has _ref and _type but no other meaningful data)
   if (typeof obj === 'object' && obj._ref && obj._type && Object.keys(obj).length === 2) {
-    return null;
+    // Return marker for root level, null for nested (to be filtered from arrays)
+    return isRoot ? EMPTY_OBJECT_MARKER : null;
   }
   
   if (Array.isArray(obj)) {
-    return obj.map(item => sanitizeReferences(item)).filter(item => item !== null);
+    const sanitized = obj.map(item => sanitizeReferences(item, false)).filter(item => item !== null);
+    return sanitized;
   }
   
   if (typeof obj === 'object') {
     const sanitized: any = {};
+    let hasValidProperties = false;
+    
     for (const [key, value] of Object.entries(obj)) {
-      const sanitizedValue = sanitizeReferences(value);
-      if (sanitizedValue !== null) {
+      // Store original value to distinguish legitimate nulls from unresolved references
+      const originalValue = value;
+      const sanitizedValue = sanitizeReferences(value, false);
+      
+      // Bug Fix 1: Preserve legitimate null values
+      // Only skip if sanitizedValue is null AND originalValue was not null (unresolved reference)
+      // If originalValue was null, preserve it
+      if (sanitizedValue !== null || originalValue === null) {
         sanitized[key] = sanitizedValue;
+        hasValidProperties = true;
       }
     }
-    return sanitized;
+    
+    // Bug Fix 2: Return marker if object became empty after sanitization (only at root level)
+    if (!hasValidProperties && isRoot) {
+      return EMPTY_OBJECT_MARKER;
+    }
+    
+    return hasValidProperties ? sanitized : (isRoot ? EMPTY_OBJECT_MARKER : {});
   }
   
   return obj;
+}
+
+/**
+ * Check if an object is the empty marker (all properties were unresolved references)
+ * Bug Fix 2: Properly detects empty objects that should fallback to mock data
+ */
+function isEmptyObject(obj: any): boolean {
+  return obj && typeof obj === 'object' && obj.__isEmpty === true;
 }
 
 /**
@@ -160,7 +190,7 @@ export async function fetchProducts() {
       products = await client.fetch(productQuery);
       products = products || [];
       // Sanitize any unresolved references
-      products = sanitizeReferences(products);
+      products = sanitizeReferences(products, false);
       // Process images to URLs
       products = processProductsImages(products);
     } catch (error) {
@@ -184,7 +214,7 @@ export async function fetchProductBySlug(slug: string) {
       product = product || null;
       // Sanitize any unresolved references
       if (product) {
-        product = sanitizeReferences(product);
+        product = sanitizeReferences(product, false);
         // Process images to URLs
         product = processProductImages(product);
       }
@@ -212,7 +242,7 @@ export async function fetchProductsByCategory(category: string) {
       products = await client.fetch(productsByCategoryQuery, { category });
       products = products || [];
       // Sanitize any unresolved references
-      products = sanitizeReferences(products);
+      products = sanitizeReferences(products, false);
       // Process images to URLs
       products = processProductsImages(products);
     } catch (error) {
@@ -232,7 +262,7 @@ export async function fetchCollections() {
 
   try {
     const collections = await client.fetch(collectionQuery);
-    let sanitized = sanitizeReferences(collections || []);
+    let sanitized = sanitizeReferences(collections || [], false);
     // Process hero images
     sanitized = sanitized.map((collection: any) => {
       if (collection.hero_image) {
@@ -258,12 +288,12 @@ export async function fetchCollectionBySlug(slug: string) {
     collection = getMockCollectionBySlug(slug);
   } else {
     try {
-      collection = await client.fetch(collectionBySlugQuery, { slug });
-      collection = collection || null;
-      // Sanitize any unresolved references
-      if (collection) {
-        collection = sanitizeReferences(collection);
-        // Process hero image
+        collection = await client.fetch(collectionBySlugQuery, { slug });
+        collection = collection || null;
+        // Sanitize any unresolved references
+        if (collection) {
+          collection = sanitizeReferences(collection, false);
+          // Process hero image
         if (collection.hero_image) {
           try {
             collection.hero_image = processImages(collection.hero_image);
@@ -303,8 +333,17 @@ export async function fetchHomepage() {
 
   try {
     const homepage = await client.fetch(homepageQuery);
-    const sanitized = homepage ? sanitizeReferences(homepage) : mockHomepage;
-    return sanitized || mockHomepage;
+    if (!homepage) {
+      return mockHomepage;
+    }
+    
+    const sanitized = sanitizeReferences(homepage, true);
+    // Check if sanitization resulted in an empty object (all properties were unresolved references)
+    if (isEmptyObject(sanitized)) {
+      return mockHomepage;
+    }
+    
+    return sanitized;
   } catch (error) {
     console.error("Error fetching homepage, using mock data:", error);
     return mockHomepage;
@@ -321,7 +360,7 @@ export async function fetchFeaturedProducts() {
       products = await client.fetch(featuredProductsQuery);
       products = products || [];
       // Sanitize any unresolved references
-      products = sanitizeReferences(products);
+      products = sanitizeReferences(products, false);
       // Process images to URLs
       products = processProductsImages(products);
     } catch (error) {
