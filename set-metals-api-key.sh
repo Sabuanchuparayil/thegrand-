@@ -25,7 +25,7 @@ fi
 
 # Set the API key
 echo "Setting METALS_API_KEY..."
-railway variables set METALS_API_KEY=FQHZW3O4SJ8R57KX3QBP714KX3QBP
+railway variables --set "METALS_API_KEY=FQHZW3O4SJ8R57KX3QBP714KX3QBP"
 
 echo ""
 echo "✅ METALS_API_KEY has been set!"
