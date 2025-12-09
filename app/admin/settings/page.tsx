@@ -2,7 +2,8 @@ export const dynamic = 'force-dynamic';
 import { getServerSession } from "@/lib/auth/session";
 import { redirect } from "next/navigation";
 import AdminLayout from "../layout";
-import { Settings, Save, Key, Globe, Bell } from "lucide-react";
+import { Settings, Key, Globe, Bell, Save } from "lucide-react";
+import SettingsForm from "./SettingsForm";
 
 export default async function AdminSettingsPage() {
   const session = await getServerSession();
@@ -35,45 +36,7 @@ export default async function AdminSettingsPage() {
             <Globe className="w-6 h-6" />
             General Settings
           </h2>
-          <form className="space-y-4">
-            <div>
-              <label className="block text-sm font-semibold text-gray-900 mb-2">
-                Site Name
-              </label>
-              <input
-                type="text"
-                defaultValue="THE GRAND"
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-semibold text-gray-900 mb-2">
-                Site URL
-              </label>
-              <input
-                type="url"
-                defaultValue={process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3011"}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-semibold text-gray-900 mb-2">
-                Default Currency
-              </label>
-              <select className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-                <option>GBP (£)</option>
-                <option>USD ($)</option>
-                <option>EUR (€)</option>
-              </select>
-            </div>
-            <button
-              type="submit"
-              className="flex items-center space-x-2 bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-600/90 transition-colors"
-            >
-              <Save className="w-5 h-5" />
-              <span>Save General Settings</span>
-            </button>
-          </form>
+          <SettingsForm />
         </div>
 
         {/* API Keys */}
