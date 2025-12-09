@@ -128,10 +128,10 @@ function getModel() {
     throw new Error("Gemini AI is not initialized. Please set GEMINI_API_KEY environment variable.");
   }
   
-  // Use gemini-pro for compatibility, or gemini-1.5-pro for better quality
-  // Note: gemini-1.5-flash may not be available in all API versions
+  // Use gemini-2.5-flash for fast responses (available as of 2025)
+  // Alternative: gemini-2.5-pro for better quality but slower
   const model = genAI.getGenerativeModel({ 
-    model: "gemini-pro", // Using gemini-pro for better compatibility
+    model: "gemini-2.5-flash", // Latest stable flash model
     systemInstruction: `You are Sabuji, a helpful customer support agent for The Grand, a luxury jewelry brand. 
     
 Use the following knowledge base to answer customer questions accurately and helpfully:
