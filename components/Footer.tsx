@@ -1,6 +1,8 @@
+"use client";
+
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Sparkles, Mail, Phone, MapPin } from "lucide-react";
-import { fetchCollections } from "@/lib/sanity/data-fetcher";
 
 const shopCategories = [
   { name: "Necklaces", href: "/shop/necklaces" },
@@ -11,12 +13,36 @@ const shopCategories = [
   { name: "Pendants", href: "/shop/pendants" },
 ];
 
-export default async function Footer() {
-  // Fetch collections dynamically
-  const collections = await fetchCollections().catch(() => []);
-  
+interface Collection {
+  _id: string;
+  title: string;
+  slug: {
+    current: string;
+  };
+}
+
+export default function Footer() {
+  const [collections, setCollections] = useState<Collection[]>([]);
+
+  useEffect(() => {
+    const fetchCollections = async () => {
+      try {
+        const response = await fetch("/api/collections");
+        if (response.ok) {
+          const data = await response.json();
+          setCollections(data.collections || []);
+        }
+      } catch (error) {
+        console.error("Error fetching collections:", error);
+        setCollections([]);
+      }
+    };
+
+    fetchCollections();
+  }, []);
+
   // Limit to first 5 collections for footer
-  const culturalCategories = collections.slice(0, 5).map((collection: any) => ({
+  const culturalCategories = collections.slice(0, 5).map((collection) => ({
     name: collection.title,
     href: `/collections/${collection.slug?.current || collection.slug}`,
   }));
