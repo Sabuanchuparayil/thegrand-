@@ -18,7 +18,8 @@ export default function SettingsForm() {
     };
   }, []);
 
-  async function handleSubmit(formData: FormData) {
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
     setIsSubmitting(true);
     setMessage(null);
 
@@ -27,6 +28,9 @@ export default function SettingsForm() {
       clearTimeout(timeoutRef.current);
       timeoutRef.current = null;
     }
+
+    // Create FormData from the form element
+    const formData = new FormData(e.currentTarget);
 
     try {
       const result = await updateGeneralSettings(formData);
@@ -60,7 +64,7 @@ export default function SettingsForm() {
   }
 
   return (
-    <form action={handleSubmit} className="space-y-4">
+    <form onSubmit={handleSubmit} className="space-y-4">
       <div>
         <label htmlFor="siteName" className="block text-sm font-semibold text-gray-900 mb-2">
           Site Name
