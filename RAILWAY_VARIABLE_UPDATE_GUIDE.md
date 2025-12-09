@@ -34,8 +34,11 @@ Select your project when prompted.
 ### Step 4: Set the METALS_API_KEY
 
 ```bash
-railway variables set METALS_API_KEY=FQHZW3O4SJ8R57KX3QBP714KX3QBP
+# Replace YOUR_API_KEY with your actual Metals.Dev API key
+railway variables --set "METALS_API_KEY=YOUR_API_KEY"
 ```
+
+**Get your API key from**: https://metals.dev/
 
 ### Step 5: Verify the Variable
 
@@ -60,7 +63,7 @@ You should see `METALS_API_KEY` in the list.
 2. Click on **"Variables"** in the left sidebar
 3. Click **"New Variable"**
 4. **Name**: `METALS_API_KEY`
-5. **Value**: `FQHZW3O4SJ8R57KX3QBP714KX3QBP`
+5. **Value**: `YOUR_API_KEY` (get from https://metals.dev/)
 6. Click **"Add"**
 
 ### Step 3: If Still Getting "Not Authorized"
@@ -100,7 +103,7 @@ curl -X POST \
   -H "Content-Type: application/json" \
   -d '{
     "name": "METALS_API_KEY",
-    "value": "FQHZW3O4SJ8R57KX3QBP714KX3QBP"
+    "value": "YOUR_API_KEY"
   }'
 ```
 
@@ -114,7 +117,7 @@ Create a script to set all variables at once:
 # Railway Variables Setup Script
 # Make sure you're logged in: railway login
 
-railway variables set METALS_API_KEY=FQHZW3O4SJ8R57KX3QBP714KX3QBP
+railway variables --set "METALS_API_KEY=YOUR_API_KEY"
 
 # Verify
 echo "Verifying variables..."
@@ -167,7 +170,7 @@ If you have Railway CLI installed and are logged in:
 ```bash
 cd "/Users/apple/Desktop/Grand Gold/The grand -Sabu"
 railway link
-railway variables set METALS_API_KEY=FQHZW3O4SJ8R57KX3QBP714KX3QBP
+railway variables --set "METALS_API_KEY=YOUR_API_KEY"
 railway variables
 ```
 
@@ -187,7 +190,9 @@ railway variables
 
 ---
 
-**Your API Key**: `FQHZW3O4SJ8R57KX3QBP714KX3QBP`
-
 **Variable Name**: `METALS_API_KEY`
+
+**Get Your API Key**: https://metals.dev/
+
+**⚠️ Security Note**: Never commit API keys to version control. Always use environment variables or secure secret management systems.
 
