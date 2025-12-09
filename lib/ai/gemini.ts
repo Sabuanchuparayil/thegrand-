@@ -266,8 +266,9 @@ Assistant: Please provide a helpful response about The Grand's products and serv
         error: error,
       });
       
-      // Return a more helpful error message with the actual error
-      return `I apologize, but I'm having trouble processing your request. Error: ${error.message}. Please try again or contact our customer service team directly at support@thegrand.co.uk.`;
+      // Return a generic error message (don't expose internal error details)
+      // The actual error is already logged server-side for debugging
+      return "I apologize, but I'm having trouble processing your request right now. Please try again later or contact our customer service team directly at support@thegrand.co.uk.";
     }
     
     // Unknown error type

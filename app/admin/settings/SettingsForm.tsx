@@ -1,16 +1,32 @@
 'use client';
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Save } from "lucide-react";
 import { updateGeneralSettings } from "./actions";
 
 export default function SettingsForm() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [message, setMessage] = useState<{ type: 'success' | 'error', text: string } | null>(null);
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  // Cleanup timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+    };
+  }, []);
 
   async function handleSubmit(formData: FormData) {
     setIsSubmitting(true);
     setMessage(null);
+
+    // Clear any existing timeout
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+      timeoutRef.current = null;
+    }
 
     try {
       const result = await updateGeneralSettings(formData);
@@ -18,17 +34,28 @@ export default function SettingsForm() {
       if (result.success) {
         setMessage({ type: 'success', text: result.message || 'Settings updated successfully!' });
       } else {
-        setMessage({ type: 'error', text: result.error || 'Failed to update settings' });
+        // Sanitize error message - don't expose internal details
+        const errorText = result.error || 'Failed to update settings';
+        // Only show generic error messages to users
+        const sanitizedError = errorText.includes('Unauthorized') || errorText.includes('Admin access')
+          ? 'You do not have permission to update settings'
+          : 'Failed to update settings. Please try again.';
+        setMessage({ type: 'error', text: sanitizedError });
       }
     } catch (error) {
+      // Don't expose error details to users - log server-side only
+      console.error('Settings update error:', error);
       setMessage({ 
         type: 'error', 
-        text: error instanceof Error ? error.message : 'An unexpected error occurred' 
+        text: 'An unexpected error occurred. Please try again or contact support.'
       });
     } finally {
       setIsSubmitting(false);
-      // Clear message after 5 seconds
-      setTimeout(() => setMessage(null), 5000);
+      // Clear message after 5 seconds, storing timeout ref for cleanup
+      timeoutRef.current = setTimeout(() => {
+        setMessage(null);
+        timeoutRef.current = null;
+      }, 5000);
     }
   }
 
