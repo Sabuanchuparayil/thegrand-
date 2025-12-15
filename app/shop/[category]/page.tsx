@@ -21,7 +21,7 @@ export default async function CategoryPage({
   searchParams,
 }: {
   params: Promise<{ category: string }>;
-  searchParams: Promise<{ occasion?: string; style?: string; material?: string }>;
+  searchParams: Promise<{ occasion?: string; style?: string; material?: string; culture?: string }>;
 }) {
   const { category } = await params;
   const resolvedSearchParams = await searchParams;
@@ -30,16 +30,71 @@ export default async function CategoryPage({
 
   // Filter products based on search params
   let filteredProducts = products;
+  
+  // Culture filter - exact match on cultural_tags
+  if (resolvedSearchParams.culture) {
+    filteredProducts = filteredProducts.filter((p: any) =>
+      p.cultural_tags?.includes(resolvedSearchParams.culture)
+    );
+  }
+  
+  // Occasion filter - partial/fuzzy match on cultural_tags
+  // Maps filter values to cultural_tags: "Bridal" -> "Traditional Indian Bridal", "Wedding" -> "Western Engagement", etc.
   if (resolvedSearchParams.occasion) {
-    filteredProducts = filteredProducts.filter((p: any) =>
-      p.cultural_tags?.includes(resolvedSearchParams.occasion)
-    );
+    const occasion = resolvedSearchParams.occasion.toLowerCase();
+    filteredProducts = filteredProducts.filter((p: any) => {
+      if (!p.cultural_tags || !Array.isArray(p.cultural_tags)) return false;
+      // Check if any cultural tag contains the occasion keyword
+      return p.cultural_tags.some((tag: string) => {
+        const tagLower = tag.toLowerCase();
+        // Map occasions to cultural tags
+        if (occasion === 'bridal' || occasion === 'wedding') {
+          return tagLower.includes('bridal') || tagLower.includes('engagement');
+        }
+        if (occasion === 'festival' || occasion === 'diwali') {
+          return tagLower.includes('traditional') || tagLower.includes('indian');
+        }
+        if (occasion === 'eid') {
+          return tagLower.includes('middle eastern') || tagLower.includes('halal');
+        }
+        if (occasion === 'cocktail') {
+          return tagLower.includes('contemporary') || tagLower.includes('minimalist');
+        }
+        // Fallback: check if tag contains the occasion keyword
+        return tagLower.includes(occasion);
+      });
+    });
   }
+  
+  // Style filter - partial match on cultural_tags
+  // Maps filter values to cultural_tags: "Traditional" -> "Traditional Indian Bridal", "Minimalist" -> "Contemporary Minimalist", etc.
   if (resolvedSearchParams.style) {
-    filteredProducts = filteredProducts.filter((p: any) =>
-      p.cultural_tags?.includes(resolvedSearchParams.style)
-    );
+    const style = resolvedSearchParams.style.toLowerCase();
+    filteredProducts = filteredProducts.filter((p: any) => {
+      if (!p.cultural_tags || !Array.isArray(p.cultural_tags)) return false;
+      // Check if any cultural tag contains the style keyword
+      return p.cultural_tags.some((tag: string) => {
+        const tagLower = tag.toLowerCase();
+        // Map styles to cultural tags
+        if (style === 'traditional') {
+          return tagLower.includes('traditional') || tagLower.includes('indian');
+        }
+        if (style === 'modern' || style === 'minimalist') {
+          return tagLower.includes('contemporary') || tagLower.includes('minimalist');
+        }
+        if (style === 'fusion') {
+          return tagLower.includes('ornate') || tagLower.includes('afro');
+        }
+        if (style === 'ethnic') {
+          return tagLower.includes('indian') || tagLower.includes('middle eastern') || tagLower.includes('afro');
+        }
+        // Fallback: check if tag contains the style keyword
+        return tagLower.includes(style);
+      });
+    });
   }
+  
+  // Material filter - exact match on material_type
   if (resolvedSearchParams.material) {
     filteredProducts = filteredProducts.filter(
       (p: any) => p.material_type === resolvedSearchParams.material
