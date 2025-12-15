@@ -15,7 +15,9 @@ export async function GET(request: NextRequest) {
         collections: collections.map((collection: any) => ({
           _id: collection._id,
           title: collection.title,
-          slug: collection.slug,
+          slug: typeof collection.slug === 'string' 
+            ? collection.slug 
+            : (collection.slug?.current || collection.slug),
         })),
       },
       { status: 200 }

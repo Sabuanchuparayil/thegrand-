@@ -11,9 +11,7 @@ import CartIcon from "./CartIcon";
 interface Collection {
   _id: string;
   title: string;
-  slug: {
-    current: string;
-  };
+  slug: string | { current: string };
 }
 
 const staticNavigationItems = [
@@ -75,10 +73,15 @@ export default function Navigation() {
       name: "Collections",
       href: "/collections",
       submenu: collections.length > 0
-        ? collections.map((collection) => ({
-            name: collection.title,
-            href: `/collections/${collection.slug.current}`,
-          }))
+        ? collections.map((collection) => {
+            const slug = typeof collection.slug === 'string' 
+              ? collection.slug 
+              : (collection.slug?.current || '');
+            return {
+              name: collection.title,
+              href: `/collections/${slug}`,
+            };
+          })
         : [
             // Fallback if no collections are loaded
             { name: "View All Collections", href: "/collections" },

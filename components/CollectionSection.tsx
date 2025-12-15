@@ -8,7 +8,7 @@ import { urlForImage } from "@/lib/sanity/image";
 interface Collection {
   _id: string;
   title: string;
-  slug: { current: string };
+  slug: string | { current: string };
   hero_image?: any;
   description?: string;
   cultural_audience?: string[];
@@ -93,7 +93,7 @@ export default function CollectionSection({
                     </div>
                   )}
                   <Link
-                    href={`/collections/${collection.slug.current}`}
+                    href={`/collections/${typeof collection.slug === 'string' ? collection.slug : (collection.slug?.current || '')}`}
                     className="inline-block px-6 py-3 border-2 border-emerald text-emerald font-semibold rounded-lg hover:bg-emerald hover:text-white transition-all duration-300"
                   >
                     Explore Collection
