@@ -5,6 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { Sparkles } from "lucide-react";
 import ProductGrid from "./ProductGrid";
+import { urlForImage } from "@/lib/sanity/image";
 
 interface CulturalGroup {
   tag: string;
@@ -83,10 +84,18 @@ export default function ExploreByCultureSection({
                     </p>
                     <div className="grid grid-cols-2 gap-2">
                       {group.products.slice(0, 4).map((product, idx) => {
-                        const imageUrl = product.images && product.images[0] 
-                          ? (typeof product.images[0] === 'string' ? product.images[0] : product.images[0])
-                          : null;
-                        const slug = product.slug?.current || product.slug?.current || '';
+                        // Bug Fix 1: Properly handle both string URLs and Sanity image objects
+                        let imageUrl: string | null = null;
+                        if (product.images && product.images[0]) {
+                          if (typeof product.images[0] === 'string') {
+                            imageUrl = product.images[0];
+                          } else {
+                            // Convert Sanity image object to URL
+                            imageUrl = urlForImage(product.images[0]) || null;
+                          }
+                        }
+                        // Bug Fix 2: Fix slug extraction with proper fallback chain
+                        const slug = product.slug?.current || (typeof product.slug === 'string' ? product.slug : '');
                         return (
                           <Link
                             key={product._id || idx}
