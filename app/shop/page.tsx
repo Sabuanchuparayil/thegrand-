@@ -2,12 +2,23 @@ import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import CategoryCarousel from "@/components/CategoryCarousel";
 import ProductGrid from "@/components/ProductGrid";
-import { fetchProducts } from "@/lib/sanity/data-fetcher";
+import { fetchProducts, fetchProductsByCulturalTag } from "@/lib/sanity/data-fetcher";
 
 export const revalidate = 60;
 
-export default async function ShopPage() {
-  const products = await fetchProducts() || [];
+export default async function ShopPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ culture?: string; culturalTag?: string }>;
+}) {
+  const resolvedSearchParams = await searchParams;
+  let products = await fetchProducts() || [];
+  
+  // Filter by culture/culturalTag if specified
+  const cultureFilter = resolvedSearchParams.culturalTag || resolvedSearchParams.culture;
+  if (cultureFilter) {
+    products = await fetchProductsByCulturalTag(cultureFilter);
+  }
 
   return (
     <main className="min-h-screen">
@@ -24,11 +35,11 @@ export default async function ShopPage() {
           </p>
         </div>
 
-        <CategoryCarousel />
+        {!cultureFilter && <CategoryCarousel />}
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           <h2 className="text-3xl font-serif font-bold text-charcoal mb-8">
-            All Products
+            {cultureFilter ? `${cultureFilter} Products` : "All Products"}
           </h2>
           {products.length > 0 ? (
             <ProductGrid products={products} />

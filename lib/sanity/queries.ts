@@ -155,3 +155,29 @@ export const featuredProductsQuery = `*[_type == "product" && featured == true] 
   labor_cost,
   pricing_model
 }`;
+
+export const productsByCulturalTagQuery = `*[_type == "product" && $tag in cultural_tags] | order(_createdAt desc) {
+  _id,
+  name,
+  slug,
+  description,
+  price,
+  images,
+  "collection": collection->{title, "slug": slug.current},
+  category,
+  cultural_tags,
+  gemstone_type,
+  material_type,
+  featured,
+  ar_2d_overlay,
+  ar_3d_model,
+  video_360,
+  gold_weight,
+  stones,
+  labor_cost,
+  pricing_model
+}`;
+
+export const allCulturalTagsQuery = `*[_type == "product" && defined(cultural_tags)] {
+  cultural_tags
+}`;

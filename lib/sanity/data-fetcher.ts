@@ -9,6 +9,8 @@ import {
   collectionBySlugQuery,
   homepageQuery,
   featuredProductsQuery,
+  productsByCulturalTagQuery,
+  allCulturalTagsQuery,
 } from "./queries";
 import {
   mockProducts,
@@ -371,6 +373,65 @@ export async function fetchFeaturedProducts() {
 
   // Enrich with dynamic prices
   return enrichProductsWithDynamicPrices(products);
+}
+
+export async function fetchProductsByCulturalTag(culturalTag: string) {
+  let products;
+  
+  if (USE_MOCK_DATA) {
+    products = mockProducts.filter((p: any) =>
+      p.cultural_tags?.includes(culturalTag)
+    );
+  } else {
+    try {
+      products = await client.fetch(productsByCulturalTagQuery, { tag: culturalTag } as any);
+      products = products || [];
+      // Sanitize any unresolved references
+      products = sanitizeReferences(products, false);
+      // Process images to URLs
+      products = processProductsImages(products);
+    } catch (error) {
+      console.error("Error fetching products by cultural tag, using mock data:", error);
+      products = mockProducts.filter((p: any) =>
+        p.cultural_tags?.includes(culturalTag)
+      );
+    }
+  }
+
+  // Enrich with dynamic prices
+  return enrichProductsWithDynamicPrices(products);
+}
+
+export async function getAllCulturalTags(): Promise<string[]> {
+  if (USE_MOCK_DATA) {
+    const tags = new Set<string>();
+    mockProducts.forEach((product: any) => {
+      if (product.cultural_tags) {
+        product.cultural_tags.forEach((tag: string) => tags.add(tag));
+      }
+    });
+    return Array.from(tags);
+  }
+
+  try {
+    const results = await client.fetch(allCulturalTagsQuery);
+    const tags = new Set<string>();
+    results.forEach((product: any) => {
+      if (product.cultural_tags && Array.isArray(product.cultural_tags)) {
+        product.cultural_tags.forEach((tag: string) => tags.add(tag));
+      }
+    });
+    return Array.from(tags);
+  } catch (error) {
+    console.error("Error fetching cultural tags, using mock data:", error);
+    const tags = new Set<string>();
+    mockProducts.forEach((product: any) => {
+      if (product.cultural_tags) {
+        product.cultural_tags.forEach((tag: string) => tags.add(tag));
+      }
+    });
+    return Array.from(tags);
+  }
 }
 
 /**

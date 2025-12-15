@@ -31,6 +31,7 @@ const staticNavigationItems = [
       { name: "Men's Jewelry", href: "/shop/mens-jewelry" },
     ],
   },
+  { name: "Explore by Culture", href: "/explore-by-culture" },
   { name: "Experience AR Try-On", href: "/ar-try-on" },
   { name: "Our Story", href: "/our-story" },
   { name: "Store & Inauguration", href: "/store" },
