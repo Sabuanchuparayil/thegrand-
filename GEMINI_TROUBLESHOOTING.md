@@ -191,3 +191,4 @@ The assistant fetches products from Sanity for context. If this fails:
 
 **Note**: The assistant requires a valid GEMINI_API_KEY to function. All error details are logged server-side for debugging, but users see safe, generic error messages.
 
+
