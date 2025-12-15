@@ -126,7 +126,7 @@ export default function Navigation() {
                       initial={{ opacity: 0, y: 10 }}
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: 10 }}
-                      className="absolute top-full left-0 mt-2 w-56 glass-morphism rounded-lg p-4 shadow-xl"
+                      className="absolute top-full left-0 mt-2 w-56 glass-morphism rounded-lg p-4 shadow-xl z-[60]"
                     >
                       {item.submenu.map((subItem) => (
                         <Link
