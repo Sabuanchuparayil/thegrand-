@@ -120,7 +120,7 @@ export default function AdminLayout({
 
       {/* Sidebar */}
       <aside
-        className={`fixed top-0 left-0 h-screen w-64 bg-white border-r border-gray-200 z-40 transition-transform duration-300 ${
+        className={`fixed top-0 left-0 h-screen w-64 bg-white z-40 transition-transform duration-300 shadow-[1px_0_0_0_rgba(229,231,235,1)] ${
           sidebarOpen ? "translate-x-0" : "-translate-x-full"
         } lg:translate-x-0 ${
           mobileMenuOpen ? "translate-x-0" : "-translate-x-full"
