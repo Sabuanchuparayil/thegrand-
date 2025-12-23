@@ -105,3 +105,16 @@ html {
   @apply bg-red/50;
 }
 
+/* Admin layout specific fixes */
+[data-admin-layout] {
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+/* Ensure admin main content aligns perfectly with sidebar - no gap */
+@media (min-width: 1024px) {
+  [data-admin-layout] > main {
+    margin-left: 256px !important;
+  }
+}
+

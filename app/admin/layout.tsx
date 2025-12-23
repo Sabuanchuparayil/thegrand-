@@ -107,7 +107,11 @@ export default function AdminLayout({
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 overflow-x-hidden">
+    <div 
+      className="min-h-screen bg-gray-50 overflow-x-hidden" 
+      style={{ margin: 0, padding: 0 }}
+      data-admin-layout
+    >
       {/* Mobile Menu Button */}
       <div className="lg:hidden fixed top-4 left-4 z-50">
         <button
@@ -125,7 +129,10 @@ export default function AdminLayout({
         } lg:translate-x-0 ${
           mobileMenuOpen ? "translate-x-0" : "-translate-x-full"
         } lg:translate-x-0`}
-        style={{ width: '256px', borderRight: '1px solid #e5e7eb' }}
+        style={{ 
+          width: '256px',
+          boxShadow: '1px 0 0 0 #e5e7eb'
+        }}
       >
         <div className="flex flex-col h-full">
           {/* Logo */}
@@ -172,7 +179,9 @@ export default function AdminLayout({
       </aside>
 
       {/* Main Content */}
-      <main className="ml-0 lg:ml-[256px] transition-all duration-300 min-h-screen">
+      <main 
+        className="ml-0 lg:ml-[256px] transition-all duration-300 min-h-screen"
+      >
         <div className="p-4 sm:p-6 lg:p-8">{children}</div>
       </main>
 
