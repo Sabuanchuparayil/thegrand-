@@ -171,7 +171,7 @@ export default function AdminLayout({
       </aside>
 
       {/* Main Content */}
-      <main className="lg:pl-64 transition-all duration-300 min-h-screen">
+      <main className="ml-0 lg:ml-64 transition-all duration-300 min-h-screen">
         <div className="p-4 sm:p-6 lg:p-8">{children}</div>
       </main>
 
