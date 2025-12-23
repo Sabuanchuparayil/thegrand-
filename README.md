@@ -173,22 +173,25 @@ The application supports dynamic pricing based on real-time gold market prices:
 
 The system is configured to fetch metal prices **twice daily** at **8 AM and 5 PM British time**:
 
-**Vercel Cron (Recommended - if deployed on Vercel)**
+**🚨 IMPORTANT: Cron Setup Depends on Deployment Platform**
+
+**For Vercel Deployments:**
 - Already configured in `vercel.json`
-- Runs automatically at 8:00 UTC and 17:00 UTC (8 AM and 5 PM GMT, 9 AM and 6 PM BST)
+- Runs automatically at 8:00 UTC and 17:00 UTC
 - No additional setup required
 
-**Option 1: External Cron Service**
-- Use services like [cron-job.org](https://cron-job.org) or [EasyCron](https://www.easycron.com)
-- Schedule POST requests to: `https://your-domain.com/api/gold-price/scheduled`
-- Include header: `Authorization: Bearer YOUR_CRON_SECRET`
-- Schedule 1: 8:00 UTC (8 AM GMT / 9 AM BST)
-- Schedule 2: 17:00 UTC (5 PM GMT / 6 PM BST)
+**For Railway Deployments (Current Setup):**
+- **Railway does NOT support `vercel.json` cron configuration**
+- **You MUST use an external cron service** (see below)
+- See `RAILWAY_CRON_SETUP.md` for detailed setup instructions
 
-**Option 2: Railway Cron Jobs**
-- Add two cron jobs in Railway dashboard:
-  - 8:00 UTC: `curl -X POST https://your-domain.com/api/gold-price/scheduled -H "Authorization: Bearer $CRON_SECRET"`
-  - 17:00 UTC: `curl -X POST https://your-domain.com/api/gold-price/scheduled -H "Authorization: Bearer $CRON_SECRET"`
+**Option 1: External Cron Service (Recommended for Railway)**
+- Use services like [cron-job.org](https://cron-job.org) (free) or [EasyCron](https://www.easycron.com)
+- Schedule POST requests to: `https://thegrand-production.up.railway.app/api/gold-price/scheduled`
+- Include header: `Authorization: Bearer YOUR_CRON_SECRET`
+- Schedule 1: `0 8 * * *` (8:00 UTC daily - 9 AM BST / 8 AM GMT)
+- Schedule 2: `0 17 * * *` (17:00 UTC daily - 6 PM BST / 5 PM GMT)
+- **Before setting up**: Make sure `CRON_SECRET` is set in Railway environment variables
 
 **What Happens During Scheduled Updates:**
 1. Single API call to Metals.Dev fetches all metal prices (gold, platinum)
@@ -199,21 +202,22 @@ The system is configured to fetch metal prices **twice daily** at **8 AM and 5 P
 **Manual Update**
 - Call `GET /api/gold-price/scheduled?action=update` with authentication
 
-**Cron Schedule (British Time)**
-- 7:00 UTC = 8:00 AM BST / 7:00 AM GMT
-- 16:00 UTC = 5:00 PM BST / 4:00 PM GMT
-- Note: Times are set for BST (British Summer Time) which is active most of the year
+**Cron Schedule Times (UTC)**
+- **Morning**: `0 8 * * *` = 8:00 UTC (9:00 AM BST / 8:00 AM GMT)
+- **Evening**: `0 17 * * *` = 17:00 UTC (6:00 PM BST / 5:00 PM GMT)
+- Note: BST (British Summer Time) is UTC+1, GMT is UTC+0. Most of the year (March-October), the UK is on BST.
 
 ### Testing the Price System
 
-Run the test script to verify the system is working correctly:
-
+**Test the price update endpoint:**
 ```bash
-npm run test:prices
+npx tsx scripts/test-cron-endpoint.ts
 ```
 
-Or directly:
+**Test the price calculation system:**
 ```bash
+npm run test:prices
+# Or directly:
 npx tsx scripts/test-price-system.ts
 ```
 

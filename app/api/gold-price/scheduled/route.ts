@@ -19,16 +19,17 @@ export async function POST(request: NextRequest) {
     const authHeader = request.headers.get("authorization");
     const cronSecret = process.env.CRON_SECRET;
     
-    // Check for CRON_SECRET authentication (for scheduled jobs)
+    // Check for CRON_SECRET authentication (for scheduled jobs) or admin session
     if (cronSecret) {
+      // CRON_SECRET is set - require either CRON_SECRET auth OR admin session
       if (authHeader && authHeader === `Bearer ${cronSecret}`) {
         // Authenticated via CRON_SECRET, proceed
       } else {
-        // If CRON_SECRET is set but not provided, check for admin session
+        // CRON_SECRET is set but not provided/matched - check for admin session
         const session = await getServerSession();
         if (!session) {
           return NextResponse.json(
-            { error: "Unauthorized" },
+            { error: "Unauthorized - CRON_SECRET or admin session required" },
             { status: 401 }
           );
         }
@@ -41,6 +42,23 @@ export async function POST(request: NextRequest) {
         }
         // Admin authenticated, proceed
       }
+    } else {
+      // CRON_SECRET is not set - require admin session
+      const session = await getServerSession();
+      if (!session) {
+        return NextResponse.json(
+          { error: "Unauthorized - Admin session required (CRON_SECRET not configured)" },
+          { status: 401 }
+        );
+      }
+      const userRole = (session.user as any)?.role;
+      if (userRole !== "admin" && userRole !== "manager") {
+        return NextResponse.json(
+          { error: "Unauthorized - Admin access required" },
+          { status: 403 }
+        );
+      }
+      // Admin authenticated, proceed
     }
 
     // Get currency from query params or body
