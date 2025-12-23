@@ -12,6 +12,8 @@
   body {
     @apply bg-cream text-charcoal antialiased;
     font-family: 'Inter', sans-serif;
+    margin: 0;
+    padding: 0;
   }
   
   h1, h2, h3, h4, h5, h6 {
@@ -86,6 +88,8 @@
 /* Smooth scrolling */
 html {
   scroll-behavior: smooth;
+  margin: 0;
+  padding: 0;
 }
 
 /* Custom scrollbar */
@@ -106,14 +110,18 @@ html {
 }
 
 /* Admin layout specific fixes */
-[data-admin-layout] {
+.admin-layout-container {
   margin: 0 !important;
   padding: 0 !important;
 }
 
 /* Ensure admin main content aligns perfectly with sidebar - no gap */
+.admin-main-content {
+  margin-left: 0 !important;
+}
+
 @media (min-width: 1024px) {
-  [data-admin-layout] > main {
+  .admin-main-content {
     margin-left: 256px !important;
   }
 }

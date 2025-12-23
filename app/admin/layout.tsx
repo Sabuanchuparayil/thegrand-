@@ -108,8 +108,8 @@ export default function AdminLayout({
 
   return (
     <div 
-      className="min-h-screen bg-gray-50 overflow-x-hidden" 
-      style={{ margin: 0, padding: 0 }}
+      className="min-h-screen bg-gray-50 overflow-x-hidden admin-layout-container" 
+      style={{ margin: 0, padding: 0, '--sidebar-width': '256px' } as React.CSSProperties & { '--sidebar-width': string }}
       data-admin-layout
     >
       {/* Mobile Menu Button */}
@@ -180,7 +180,7 @@ export default function AdminLayout({
 
       {/* Main Content */}
       <main 
-        className="ml-0 lg:ml-[256px] transition-all duration-300 min-h-screen"
+        className="admin-main-content transition-all duration-300 min-h-screen"
       >
         <div className="p-4 sm:p-6 lg:p-8">{children}</div>
       </main>
