@@ -107,7 +107,7 @@ export default function AdminLayout({
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 relative">
+    <div className="min-h-screen bg-gray-50">
       {/* Mobile Menu Button */}
       <div className="lg:hidden fixed top-4 left-4 z-50">
         <button
@@ -171,7 +171,7 @@ export default function AdminLayout({
       </aside>
 
       {/* Main Content */}
-      <main className={`lg:ml-64 transition-all duration-300 min-h-screen`}>
+      <main className="lg:ml-64 transition-all duration-300 min-h-screen w-full">
         <div className="p-4 sm:p-6 lg:p-8">{children}</div>
       </main>
 
