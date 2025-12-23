@@ -107,7 +107,7 @@ export default function AdminLayout({
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 overflow-x-hidden">
       {/* Mobile Menu Button */}
       <div className="lg:hidden fixed top-4 left-4 z-50">
         <button
@@ -120,7 +120,7 @@ export default function AdminLayout({
 
       {/* Sidebar */}
       <aside
-        className={`fixed top-0 left-0 h-full w-64 bg-white border-r border-gray-200 z-40 transition-transform duration-300 ${
+        className={`fixed top-0 left-0 h-screen w-64 bg-white border-r border-gray-200 z-40 transition-transform duration-300 ${
           sidebarOpen ? "translate-x-0" : "-translate-x-full"
         } lg:translate-x-0 ${
           mobileMenuOpen ? "translate-x-0" : "-translate-x-full"
@@ -171,7 +171,7 @@ export default function AdminLayout({
       </aside>
 
       {/* Main Content */}
-      <main className="lg:ml-64 transition-all duration-300 min-h-screen w-full">
+      <main className="lg:pl-64 transition-all duration-300 min-h-screen">
         <div className="p-4 sm:p-6 lg:p-8">{children}</div>
       </main>
 
