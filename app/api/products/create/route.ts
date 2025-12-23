@@ -34,6 +34,7 @@ export async function POST(request: NextRequest) {
       cultural_tags,
       featured,
       pricing_model,
+      images,
     } = body;
 
     if (!name || !description || !price || !category) {
@@ -72,6 +73,11 @@ export async function POST(request: NextRequest) {
     } else if (gemstone_type && gemstone_type !== "None") {
       // Backward compatibility: convert single gemstone_type to stones array
       productData.gemstone_type = gemstone_type;
+    }
+
+    // Handle images
+    if (images && Array.isArray(images) && images.length > 0) {
+      productData.images = images.filter((img: any) => img && img.asset);
     }
 
     const product = await client.create(productData);

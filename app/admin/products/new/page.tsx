@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import AdminLayout from "../../layout";
-import { Package, Save, X, Upload } from "lucide-react";
+import { Package, Save, X, Upload, Image as ImageIcon, Trash2 } from "lucide-react";
 import Link from "next/link";
 
 export default function NewProductPage() {
@@ -21,7 +21,10 @@ export default function NewProductPage() {
     cultural_tags: [] as string[],
     featured: false,
     pricing_model: "fixed" as "fixed" | "dynamic",
+    images: [] as Array<{ asset: { _ref: string }; alt?: string }>,
   });
+  const [uploadingImages, setUploadingImages] = useState(false);
+  const [imagePreviewUrls, setImagePreviewUrls] = useState<string[]>([]);
 
   const categories = [
     "Necklaces",
@@ -66,6 +69,59 @@ export default function NewProductPage() {
     }));
   };
 
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files || files.length === 0) return;
+
+    setUploadingImages(true);
+    try {
+      const uploadPromises = Array.from(files).map(async (file) => {
+        const uploadFormData = new FormData();
+        uploadFormData.append("file", file);
+        uploadFormData.append("alt", `${formData.name || "Product"} image`);
+
+        const response = await fetch("/api/upload/image", {
+          method: "POST",
+          body: uploadFormData,
+        });
+
+        if (!response.ok) {
+          const data = await response.json();
+          throw new Error(data.error || "Failed to upload image");
+        }
+
+        const data = await response.json();
+        return data;
+      });
+
+      const uploadResults = await Promise.all(uploadPromises);
+      const uploadedImages = uploadResults.map((result) => result.image);
+      
+      setFormData((prev) => ({
+        ...prev,
+        images: [...prev.images, ...uploadedImages],
+      }));
+
+      // Use the URL from the upload response
+      const previewUrls = uploadResults.map((result) => result.url).filter(Boolean);
+      setImagePreviewUrls((prev) => [...prev, ...previewUrls]);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to upload images");
+    } finally {
+      setUploadingImages(false);
+      // Reset file input
+      e.target.value = "";
+    }
+  };
+
+  const removeImage = (index: number) => {
+    setFormData((prev) => ({
+      ...prev,
+      images: prev.images.filter((_, i) => i !== index),
+    }));
+    setImagePreviewUrls((prev) => prev.filter((_, i) => i !== index));
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
@@ -84,6 +140,7 @@ export default function NewProductPage() {
             ? parseFloat(formData.gold_weight)
             : undefined,
           stones: formData.stones.filter((stone) => stone.type), // Only send stones with type
+          images: formData.images, // Include uploaded images
         }),
       });
 
@@ -391,14 +448,76 @@ export default function NewProductPage() {
               Images
             </h2>
             <p className="text-sm text-gray-600 mb-4">
-              Product images can be added after creation via Sanity Studio.
+              Upload product images. Recommended: 800x800px minimum, JPG or PNG format. First image will be the main product image.
             </p>
-            <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center">
-              <Upload className="w-12 h-12 text-gray-400 mx-auto mb-2" />
-              <p className="text-gray-600">
-                Images will be managed in Sanity Studio
-              </p>
+            
+            {/* Image Upload Area */}
+            <div className="mb-4">
+              <input
+                type="file"
+                accept="image/*"
+                multiple
+                onChange={handleImageUpload}
+                disabled={uploadingImages}
+                className="hidden"
+                id="image-upload"
+              />
+              <label
+                htmlFor="image-upload"
+                className="block cursor-pointer"
+              >
+                <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-blue-500 transition-colors">
+                  {uploadingImages ? (
+                    <div className="flex flex-col items-center">
+                      <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mb-2"></div>
+                      <p className="text-gray-600">Uploading images...</p>
+                    </div>
+                  ) : (
+                    <>
+                      <Upload className="w-12 h-12 text-gray-400 mx-auto mb-2" />
+                      <p className="text-gray-600 mb-1">
+                        Click to upload or drag and drop
+                      </p>
+                      <p className="text-sm text-gray-500">
+                        PNG, JPG up to 10MB (multiple files supported)
+                      </p>
+                    </>
+                  )}
+                </div>
+              </label>
             </div>
+
+            {/* Image Preview Grid */}
+            {formData.images.length > 0 && (
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                {formData.images.map((image, index) => (
+                  <div
+                    key={index}
+                    className="relative group border border-gray-200 rounded-lg overflow-hidden"
+                  >
+                    {imagePreviewUrls[index] && (
+                      <img
+                        src={imagePreviewUrls[index]}
+                        alt={image.alt || `Product image ${index + 1}`}
+                        className="w-full h-32 object-cover"
+                      />
+                    )}
+                    <button
+                      type="button"
+                      onClick={() => removeImage(index)}
+                      className="absolute top-2 right-2 p-1 bg-red-600 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </button>
+                    {index === 0 && (
+                      <div className="absolute bottom-0 left-0 right-0 bg-blue-600 text-white text-xs px-2 py-1">
+                        Main Image
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
 
           <div className="flex items-center justify-end space-x-4">
