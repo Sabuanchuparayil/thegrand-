@@ -110,8 +110,6 @@ export default function AdminLayout({
     <>
       <style dangerouslySetInnerHTML={{__html: `
         [data-admin-layout] > main {
-          position: relative !important;
-          left: 0 !important;
           margin-left: 0 !important;
           padding-left: 0 !important;
         }

@@ -120,8 +120,6 @@ html {
 /* Use both class and data attribute for maximum specificity */
 .admin-main-content,
 [data-admin-layout] > main {
-  position: relative !important;
-  left: 0 !important;
   margin-left: 0 !important;
   padding-left: 0 !important;
   margin-right: 0 !important;
