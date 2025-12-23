@@ -109,20 +109,25 @@ html {
   @apply bg-red/50;
 }
 
-/* Admin layout specific fixes */
+/* Admin layout specific fixes - eliminate all spacing */
 .admin-layout-container {
   margin: 0 !important;
   padding: 0 !important;
+  background: transparent !important;
 }
 
-/* Ensure admin main content aligns perfectly with sidebar - no gap */
+/* Ensure admin main content aligns perfectly with sidebar - absolutely no gap */
 .admin-main-content {
+  margin: 0 !important;
+  padding: 0 !important;
   margin-left: 0 !important;
+  padding-left: 0 !important;
 }
 
 @media (min-width: 1024px) {
   .admin-main-content {
     margin-left: 256px !important;
+    padding-left: 0 !important;
   }
 }
 
