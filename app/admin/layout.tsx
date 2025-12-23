@@ -112,14 +112,16 @@ export default function AdminLayout({
         [data-admin-layout] > main {
           margin-left: 0 !important;
           padding-left: 0 !important;
+          position: static !important;
+          left: auto !important;
         }
         @media (min-width: 1024px) {
           [data-admin-layout] > main {
-            position: relative !important;
-            left: 256px !important;
-            width: calc(100% - 256px) !important;
-            margin-left: 0 !important;
+            margin-left: 256px !important;
             padding-left: 0 !important;
+            position: static !important;
+            left: auto !important;
+            width: auto !important;
           }
         }
       `}} />
