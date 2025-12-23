@@ -19,12 +19,18 @@ import {
   Menu,
   X,
   Palette,
+  Tag,
+  Gem,
+  Layers,
 } from "lucide-react";
 import { signOut } from "next-auth/react";
 
 const adminMenuItems = [
   { name: "Dashboard", href: "/admin", icon: LayoutDashboard },
   { name: "Products", href: "/admin/products", icon: Package },
+  { name: "Categories", href: "/admin/categories", icon: Tag },
+  { name: "Materials", href: "/admin/materials", icon: Layers },
+  { name: "Stones", href: "/admin/stones", icon: Gem },
   { name: "Orders", href: "/admin/orders", icon: ShoppingBag },
   { name: "Users", href: "/admin/users", icon: Users },
   { name: "Roles", href: "/admin/roles", icon: Shield },
