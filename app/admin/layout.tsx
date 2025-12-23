@@ -120,11 +120,12 @@ export default function AdminLayout({
 
       {/* Sidebar */}
       <aside
-        className={`fixed top-0 left-0 h-screen w-64 bg-white z-40 transition-transform duration-300 shadow-[1px_0_0_0_rgba(229,231,235,1)] ${
+        className={`fixed top-0 left-0 h-screen bg-white z-40 transition-transform duration-300 ${
           sidebarOpen ? "translate-x-0" : "-translate-x-full"
         } lg:translate-x-0 ${
           mobileMenuOpen ? "translate-x-0" : "-translate-x-full"
         } lg:translate-x-0`}
+        style={{ width: '256px', borderRight: '1px solid #e5e7eb' }}
       >
         <div className="flex flex-col h-full">
           {/* Logo */}
@@ -171,7 +172,7 @@ export default function AdminLayout({
       </aside>
 
       {/* Main Content */}
-      <main className="ml-0 lg:ml-64 transition-all duration-300 min-h-screen">
+      <main className="ml-0 lg:ml-[256px] transition-all duration-300 min-h-screen">
         <div className="p-4 sm:p-6 lg:p-8">{children}</div>
       </main>
 
