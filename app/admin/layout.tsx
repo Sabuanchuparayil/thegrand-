@@ -151,7 +151,8 @@ export default function AdminLayout({
           width: '256px',
           margin: 0,
           padding: 0,
-          boxShadow: '1px 0 0 0 #e5e7eb'
+          borderRight: '1px solid #e5e7eb',
+          boxSizing: 'border-box'
         }}
       >
         <div className="flex flex-col h-full">
