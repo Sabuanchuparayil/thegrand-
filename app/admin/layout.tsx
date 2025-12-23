@@ -107,11 +107,24 @@ export default function AdminLayout({
   }
 
   return (
-    <div 
-      className="min-h-screen overflow-x-hidden admin-layout-container" 
-      style={{ margin: 0, padding: 0 }}
-      data-admin-layout
-    >
+    <>
+      <style dangerouslySetInnerHTML={{__html: `
+        @media (min-width: 1024px) {
+          [data-admin-layout] > main {
+            margin-left: 256px !important;
+            padding-left: 0 !important;
+          }
+        }
+        [data-admin-layout] > main {
+          margin-left: 0 !important;
+          padding-left: 0 !important;
+        }
+      `}} />
+      <div 
+        className="min-h-screen overflow-x-hidden admin-layout-container" 
+        style={{ margin: 0, padding: 0 }}
+        data-admin-layout
+      >
       {/* Mobile Menu Button */}
       <div className="lg:hidden fixed top-4 left-4 z-50">
         <button
@@ -195,6 +208,7 @@ export default function AdminLayout({
         />
       )}
     </div>
+    </>
   );
 }
 
