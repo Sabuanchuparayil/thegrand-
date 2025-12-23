@@ -110,18 +110,16 @@ export default function AdminLayout({
     <>
       <style dangerouslySetInnerHTML={{__html: `
         [data-admin-layout] > main {
-          margin-left: 0 !important;
-          padding-left: 0 !important;
-          position: static !important;
-          left: auto !important;
+          margin: 0 !important;
+          padding: 0 !important;
         }
         @media (min-width: 1024px) {
           [data-admin-layout] > main {
             margin-left: 256px !important;
-            padding-left: 0 !important;
-            position: static !important;
-            left: auto !important;
-            width: auto !important;
+            margin-right: 0 !important;
+            margin-top: 0 !important;
+            margin-bottom: 0 !important;
+            padding: 0 !important;
           }
         }
       `}} />
